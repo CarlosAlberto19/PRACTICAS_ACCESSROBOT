@@ -1,27 +1,61 @@
 <script setup>
-defineProps({
+const props = defineProps({
   label: String,
-  type: String
+  type: String,
+  disabled: Boolean
 });
+
+const handleClick = () => {
+  console.log("Botón clickeado");
+};
 </script>
 
 <template>
-  <button :type="type">{{ label }}</button>
+  <button 
+    :type="props.type" 
+    :disabled="props.disabled" 
+    @click="handleClick"
+    class="secondary-button"
+  >
+    <span>{{ props.label }}</span> 
+  </button>
 </template>
 
+
 <style scoped>
-button {
-  background-color: transparent;
+.secondary-button {
+  width: 343px;
+  height: 50px;
+  background: transparent;
   border: 2px solid #8a2be2;
   color: #8a2be2;
-  padding: 10px 15px;
-  border-radius: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 25px;
   cursor: pointer;
-  font-size: 16px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;  /* Centra verticalmente */
+  justify-content: center; /* Centra horizontalmente */
+  text-align: center;
+  position: relative; /* Evita desbordamientos raros */
+  overflow: hidden; /* Evita que el texto se salga */
 }
 
-button:hover {
-  background-color: #8a2be2;
+.secondary-button span {
+  display: block; /* Asegura que el texto no se salga */
+}
+
+
+.secondary-button:hover {
+  background: #8a2be2;
   color: white;
+}
+
+.secondary-button:disabled {
+  background: gray;
+  border-color: gray;
+  cursor: not-allowed;
+  color: white; /* Asegura que el texto sea visible en disabled */
 }
 </style>
