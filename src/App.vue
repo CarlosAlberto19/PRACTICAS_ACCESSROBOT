@@ -1,26 +1,25 @@
 <template>
   <div class="app-container">
-    <nav>
-      <router-link to="/">Home</router-link>
-      <router-link to="/login">Login</router-link>
-      <router-link to="/about">About</router-link>
-    </nav>
-    <router-view />
+    <header>
+      <nav>
+        <router-link to="/">Home</router-link>
+        <router-link to="/login">Login</router-link>
+        <router-link to="/about">About</router-link>
+      </nav>
+    </header>
+
+    <!-- 📌 Aseguramos que todo se distribuye en HORIZONTAL -->
+    <main>
+      <router-view />
+    </main>
   </div>
 </template>
 
 <style scoped>
-/* Bloque principal */
-.app-container {
-  width: 100%;
-  /* Elimina o modifica: */
-  /* min-height: 100vh; */
-  /* background-color: #f0f0f0; */
-  background-color: #fff; /* o #transparent, si prefieres */
-  margin: 0; 
-  padding: 0;
-}
+/* 📌 CONTENEDOR PRINCIPAL */
 
+
+/* 📌 HEADER Y NAVEGACIÓN */
 header {
   width: 100%;
   padding: 20px;
@@ -45,10 +44,5 @@ nav a.router-link-exact-active {
   text-decoration: underline;
 }
 
-main {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 80vh;
-}
+
 </style>

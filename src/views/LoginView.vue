@@ -1,80 +1,58 @@
 <template>
-  <div class="page-container">
+  <div class="contenedor-pagina">
     <!-- CABECERA: Título + Imagen, centrados arriba -->
-    <div class="header">
-      <h1 class="title">Access Robot</h1>
-      <img 
-        src="@/assets/images/ARturo.png" 
-        alt="Robot" 
-        class="robot-img" 
-      />
+    <div class="cabecera">
+      <h1 class="titulo">Access Robot</h1>
+      <img src="@/assets/images/ARturo.png" alt="Robot" class="imagen-robot" />
     </div>
 
-    <!-- CONTENEDOR HORIZONTAL (TODO EN UNA SOLA FILA SI LO DESEAS) -->
-    <div class="horizontal-container">
-      <!-- FORMULARIO (dentro de su caja) -->
-      <div class="form-box">
-        <h2 class="subtitle">Crear nueva cuenta</h2>
-        
-        <div class="input-group">
-          <label for="email">Email</label>
-          <input 
-            id="email" 
-            type="email" 
-            placeholder="Introduce tu email" 
-          />
+    <!-- CONTENEDOR PRINCIPAL EN HORIZONTAL -->
+    <div class="contenedor-horizontal">
+      <!-- FORMULARIO -->
+      <div class="caja-formulario">
+        <h2 class="subtitulo">Crear nueva cuenta</h2>
 
-          <label for="password">Contraseña</label>
-          <div class="password-wrapper">
-            <input
-              id="password"
-              :type="showPassword ? 'text' : 'password'"
-              placeholder="Crea una contraseña"
-            />
-            <span class="icon material-icons" @click="togglePassword">
-              {{ showPassword ? 'visibility_off' : 'visibility' }}
-            </span>
+        <div class="grupo-inputs">
+          <div class="campo">
+            <label for="correo">Email</label>
+            <input id="correo" type="email" placeholder="Introduce tu email" />
+          </div>
+
+          <div class="campo">
+            <label for="clave">Contraseña</label>
+            <div class="envoltorio-clave">
+              <input id="clave" type="password" placeholder="Crea una contraseña" />
+              <span class="icono material-icons">visibility</span>
+            </div>
           </div>
         </div>
 
         <!-- Checkbox de Términos -->
-        <div class="checkbox-container">
-          <label class="custom-checkbox">
+        <div class="contenedor-checkbox">
+          <label class="checkbox-personalizado">
             <input type="checkbox" v-model="aceptaTerminos" />
-            <span class="checkmark"></span>
+            <span class="marca"></span>
           </label>
-          <span class="checkbox-label">
-            Acepto los Términos y condiciones de uso
-          </span>
+          <span class="texto-checkbox">Acepto los Términos y condiciones de uso</span>
         </div>
 
-        <!-- Botón para ir a la siguiente vista -->
-        <PrimaryButton
-          label="Siguiente"
-          type="button"
-          :disabled="!aceptaTerminos"
-          @click="handleNext"
-        />
+        <!-- Botón Siguiente -->
+        <PrimaryButton label="Siguiente" type="button" :disabled="!aceptaTerminos" @click="handleNext" />
 
-        <hr class="divider" />
+        <!-- Nueva separación para "¿Ya tienes cuenta?" -->
+        <div class="separador-inferior"></div>
 
-        <p>¿Ya tienes cuenta?</p>
+        <p class="texto-centrado">¿Ya tienes cuenta?</p>
 
-        <!-- Botón para ir a Iniciar Sesión -->
-        <SecondaryButton
-          label="Ir a iniciar sesión"
-          type="button"
-          @click="goToLogin"
-        />
+        <!-- Botón Iniciar Sesión -->
+        <SecondaryButton label="Ir a iniciar sesión" type="button" @click="goToLogin" />
+
+        <!-- Texto de "¿Has olvidado tu contraseña?" -->
+        <p class="texto-olvido"><strong>¿Has olvidado tu contraseña?</strong></p>
+
+        <!-- Línea negra mejorada -->
+        <hr class="linea-separadora" />
       </div>
-
-      <!-- 
-        🔻 Si quieres añadir otra sección (imágenes, texto, etc.) a la derecha,
-        puedes añadirla aquí. Deja este div vacío o quítalo si no lo necesitas.
-      -->
-      <!-- <div class="other-section">
-        <p>Contenido adicional</p>
-      </div> -->
     </div>
   </div>
 </template>
@@ -82,117 +60,94 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-
-/* Importa tus componentes de botón */
 import PrimaryButton from '@/components/PrimaryButton.vue';
 import SecondaryButton from '@/components/SecondaryButton.vue';
 
 const router = useRouter();
-
-// Checkbox de términos
 const aceptaTerminos = ref(false);
 
-// Mostrar / ocultar password
-const showPassword = ref(false);
-const togglePassword = () => {
-  showPassword.value = !showPassword.value;
-};
-
-// Botón "Siguiente"
 const handleNext = () => {
   if (aceptaTerminos.value) {
-    console.log("Redirigiendo a la siguiente vista...");
     router.push('/auth');
   }
 };
 
-// Botón "Ir a iniciar sesión"
 const goToLogin = () => {
   router.push('/login');
 };
 </script>
 
 <style scoped>
-/* Importación de íconos de Google (visibility, visibility_off, etc.) */
-@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
-
-/* --- RESETEO BÁSICO (opcional) --- */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-/* --- CONTENEDOR PRINCIPAL, CENTRADO HORIZONTALMENTE --- */
-.page-container {
+/* CONTENEDOR PRINCIPAL */
+.contenedor-pagina {
   width: 100%;
-  max-width: 1200px;  /* Ajusta según necesites */
-  margin: 0 auto;      /* Centra horizontalmente */
+  max-width: 1200px;
+  margin: 0 auto;
   background-color: #f8f9fa;
   padding: 20px;
 }
 
-/* CABECERA: TÍTULO + IMAGEN, ALINEADO AL CENTRO */
-.header {
+/* CABECERA */
+.cabecera {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-bottom: 30px;
 }
 
-.title {
+.titulo {
   font-size: 30px;
   font-weight: bold;
   margin-bottom: 10px;
 }
 
-.robot-img {
+.imagen-robot {
   width: 140px;
   height: auto;
   object-fit: contain;
 }
 
-/* --- CONTENEDOR HORIZONTAL PARA TODO EL CONTENIDO --- */
-.horizontal-container {
-  display: flex;                /* Fila */
-  flex-direction: row;
-  justify-content: center;      /* Centra horizontalmente el contenido */
-  align-items: flex-start;      /* Alinea arriba (puedes cambiar a center) */
-  gap: 50px;                    /* Espacio entre columnas */
-  width: 100%;                  /* Ocupa todo el ancho disponible */
+/* CONTENEDOR HORIZONTAL */
+.contenedor-horizontal {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 50px;
+  width: 100%;
 }
 
-/* --- CAJA DEL FORMULARIO --- */
-.form-box {
-  flex: 1;                      /* Para que ocupe espacio y se ajuste */
-  max-width: 450px;             /* Ancho máximo del formulario */
-  background: #fff;
-  border-radius: 10px;
+/* CAJA DEL FORMULARIO */
+.caja-formulario {
+  width: 100%;
+  max-width: 400px;
   padding: 20px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-/* Subtítulo dentro de la caja */
-.subtitle {
-  font-size: 20px;
-  margin-bottom: 10px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   text-align: center;
 }
 
-/* --- INPUTS --- */
-.input-group {
+/* INPUTS */
+.grupo-inputs {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 15px;
   margin-bottom: 15px;
+  text-align: left; /* ✅ Todo alineado a la izquierda */
 }
 
-.input-group label {
+.campo {
+  display: flex;
+  flex-direction: column;
+}
+
+.campo label {
   font-size: 16px;
   font-weight: 500;
+  margin-bottom: 5px;
 }
 
-.input-group input {
+.campo input {
   width: 100%;
   padding: 10px;
   font-size: 16px;
@@ -201,16 +156,16 @@ const goToLogin = () => {
   outline: none;
 }
 
-/* --- PASSWORD WRAPPER (input + ícono) --- */
-.password-wrapper {
+/* PASSWORD WRAPPER */
+.envoltorio-clave {
   position: relative;
 }
 
-.password-wrapper input {
+.envoltorio-clave input {
   padding-right: 40px;
 }
 
-.icon {
+.icono {
   position: absolute;
   top: 50%;
   right: 10px;
@@ -220,12 +175,13 @@ const goToLogin = () => {
   color: #666;
   transition: color 0.3s;
 }
-.icon:hover {
+
+.icono:hover {
   color: #333;
 }
 
-/* --- CHECKBOX DE TÉRMINOS --- */
-.checkbox-container {
+/* CHECKBOX */
+.contenedor-checkbox {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -233,13 +189,13 @@ const goToLogin = () => {
   margin-bottom: 15px;
 }
 
-.custom-checkbox {
+.checkbox-personalizado {
   display: inline-flex;
   align-items: center;
   position: relative;
 }
 
-.custom-checkbox input {
+.checkbox-personalizado input {
   position: absolute;
   opacity: 0;
   cursor: pointer;
@@ -247,7 +203,7 @@ const goToLogin = () => {
   width: 0;
 }
 
-.checkmark {
+.marca {
   width: 18px;
   height: 18px;
   background-color: #E9E9E9;
@@ -255,11 +211,11 @@ const goToLogin = () => {
   transition: all 0.3s ease;
 }
 
-.custom-checkbox input:checked + .checkmark {
+.checkbox-personalizado input:checked + .marca {
   background-color: #4CAF50;
 }
 
-.custom-checkbox input:checked + .checkmark::after {
+.checkbox-personalizado input:checked + .marca::after {
   content: "✔";
   color: white;
   font-size: 12px;
@@ -268,11 +224,23 @@ const goToLogin = () => {
   text-align: center;
 }
 
-/* --- SEPARADOR --- */
-.divider {
-  margin: 20px 0;
-  width: 100%;
+/* SEPARADOR PARA "¿YA TIENES CUENTA?" */
+.separador-inferior {
+  margin-top: 25px;
+}
+
+/* LÍNEA SEPARADORA MEJORADA */
+.linea-separadora {
+  margin: 15px auto;
+  width: 60%;  /* 🔥 Más corta */
   border: 0;
-  border-top: 1px solid #ccc;
+  border-top: 3px solid black; /* 🔥 Más grosor y color negro */
+}
+
+/* TEXTO DE "¿HAS OLVIDADO TU CONTRASEÑA?" */
+.texto-olvido {
+  margin-top: 15px; /* Ajusta el espaciado */
+  font-weight: bold;
+  text-decoration: none;
 }
 </style>
