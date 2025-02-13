@@ -4,6 +4,7 @@
       <nav>
         <router-link to="/">Home</router-link>
         <router-link to="/login">Login</router-link>
+        <router-link to="/login-web">Login Web</router-link> <!-- ✅ Nuevo enlace -->
         <router-link to="/about">About</router-link>
       </nav>
     </header>
@@ -17,7 +18,6 @@
 
 <style scoped>
 /* 📌 CONTENEDOR PRINCIPAL */
-
 
 /* 📌 HEADER Y NAVEGACIÓN */
 header {
@@ -43,6 +43,4 @@ nav a.router-link-exact-active {
   color: #7a20d2;
   text-decoration: underline;
 }
-
-
 </style>
