@@ -29,22 +29,40 @@
         <PruebaInput label_input="Email" placeholder="Introduce tu email" type="email"/>
         <PruebaInput label_input="Contraseña" placeholder="Introduce tu contraseña" type="password"/>
 
+<<<<<<< HEAD
         <!-- Checkbox de Términos -->
+=======
+        <!-- Checkbox de Términos
+>>>>>>> 7c7e8f1 (Nuevo mensaje más claro para el commit)
         <div class="contenedor-checkbox">
           <label class="checkbox-personalizado">
             <input type="checkbox" v-model="aceptaTerminos" />
             <span class="marca"></span>
           </label>
           <span class="texto-checkbox">Acepto los Términos y condiciones de uso</span>
+<<<<<<< HEAD
         </div>
+=======
+        </div>  -->
+        <!-- ✅ Reemplazamos el checkbox manual por el componente -->
+        <Checkbox v-model="aceptaTerminos" label="Acepto los Términos y condiciones de uso" />
+>>>>>>> 7c7e8f1 (Nuevo mensaje más claro para el commit)
 
         <!-- Botón Siguiente -->
         <PrimaryButton 
           label="Siguiente" 
           type="submit" 
+<<<<<<< HEAD
           :disabled="!aceptaTerminos"
           ruta="/datos-personales"
         />
+=======
+          v-model="aceptaTerminos"
+          ruta="/datos-personales"
+        />
+
+
+>>>>>>> 7c7e8f1 (Nuevo mensaje más claro para el commit)
       </form>
 
       <p class="texto-centrado">¿Ya tienes cuenta?</p>
@@ -64,6 +82,10 @@ import { useRouter } from 'vue-router';
 import PrimaryButton from '@/components/PrimaryButton.vue';
 import SecondaryButton from '@/components/SecondaryButton.vue';
 import PruebaInput from '@/components/PruebaInput.vue';
+<<<<<<< HEAD
+=======
+import Checkbox from '@/components/Checkbox.vue'; // ✅ Importamos el checkbox
+>>>>>>> 7c7e8f1 (Nuevo mensaje más claro para el commit)
 
 const router = useRouter();
 const aceptaTerminos = ref(false);

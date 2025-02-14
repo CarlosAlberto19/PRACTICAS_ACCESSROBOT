@@ -1,35 +1,34 @@
 <template>
   <RouterLink
+<<<<<<< HEAD
     :type="props.type" 
     :disabled="props.disabled" 
     @click="handleClick"
     :to="ruta"
+=======
+    :to="!disabled ? ruta : ''" 
+>>>>>>> 7c7e8f1 (Nuevo mensaje más claro para el commit)
     class="primary-button"
+    :class="{ 'boton-deshabilitado': disabled }"
   >
     {{ props.label }}
   </RouterLink>
 </template>
 
 <script setup>
-import botonIcon from '../assets/images/Boton.png'; // Asegúrate de que la ruta es correcta
-
 const props = defineProps({
   label: String,
   type: String,
   disabled: Boolean,
   ruta: String
 });
-
-const handleClick = () => {
-  console.log("Botón clickeado");
-};
 </script>
 
 <style scoped>
 .primary-button {
   width: 343px;
   height: 50px;
-  background: linear-gradient(90deg, #A078F4, #7A40E0); /* Ajuste del gradiente */
+  background: linear-gradient(90deg, #A078F4, #7A40E0); /* 🔥 Ajuste del gradiente */
   border: none;
   color: white;
   font-size: 18px;
@@ -42,5 +41,13 @@ const handleClick = () => {
   align-items: center;
   justify-content: center;
   text-align: center;
+  text-decoration: none;
+}
+
+/* 🔥 Estilo para cuando el botón está deshabilitado */
+.boton-deshabilitado {
+  pointer-events: none; /* 🔥 Evita que el usuario haga clic */
+  opacity: 0.5; /* 🔥 Visualmente más tenue */
+  background: gray; /* 🔥 Para que se vea claramente deshabilitado */
 }
 </style>

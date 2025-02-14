@@ -2,12 +2,18 @@
 defineProps({
   label: String, // Texto que acompañará al checkbox
   modelValue: Boolean // Para vincularlo con v-model
-})
+});
+
+const emit = defineEmits(['update:modelValue']);
 </script>
 
 <template>
   <label class="checkbox-container">
-    <input type="checkbox" :checked="modelValue">
+    <input 
+      type="checkbox" 
+      :checked="modelValue" 
+      @change="emit('update:modelValue', $event.target.checked)" 
+    />
     <span>{{ label }}</span>
   </label>
 </template>

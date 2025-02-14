@@ -1,61 +1,37 @@
-<script setup>
-const props = defineProps({
-  label: String,
-  type: String,
-  disabled: Boolean
-});
-
-const handleClick = () => {
-  console.log("Botón clickeado");
-};
-</script>
-
 <template>
-  <button 
-    :type="props.type" 
-    :disabled="props.disabled" 
-    @click="handleClick"
-    class="secondary-button"
-  >
-    <span>{{ props.label }}</span> 
+  <button class="secondary-button" @click="handleClick">
+    {{ label }}
   </button>
 </template>
 
+<script setup>
+defineProps({
+  label: String
+});
+
+const handleClick = () => {
+  console.log("Botón secundario clickeado");
+};
+</script>
 
 <style scoped>
 .secondary-button {
   width: 343px;
   height: 50px;
-  background: transparent;
-  border: 2px solid #8a2be2;
-  color: #8a2be2;
+  background: transparent;  /* 🔥 Ahora es transparente */
+  border: 2px solid #7A40E0; /* 🔥 Mantiene el borde morado */
+  color: #7A40E0; /* 🔥 Color de texto morado */
   font-size: 18px;
   font-weight: bold;
   border-radius: 25px;
   cursor: pointer;
   transition: all 0.3s ease;
-  display: flex;
-  align-items: center;  /* Centra verticalmente */
-  justify-content: center; /* Centra horizontalmente */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
   text-align: center;
-  position: relative; /* Evita desbordamientos raros */
-  overflow: hidden; /* Evita que el texto se salga */
 }
-
-.secondary-button span {
-  display: block; /* Asegura que el texto no se salga */
-}
-
 
 .secondary-button:hover {
-  background: #8a2be2;
+  background: #7A40E0;
   color: white;
-}
-
-.secondary-button:disabled {
-  background: gray;
-  border-color: gray;
-  cursor: not-allowed;
-  color: white; /* Asegura que el texto sea visible en disabled */
 }
 </style>
