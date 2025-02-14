@@ -1,12 +1,13 @@
 <template>
-  <button 
+  <RouterLink
     :type="props.type" 
     :disabled="props.disabled" 
     @click="handleClick"
+    :to="ruta"
     class="primary-button"
   >
     {{ props.label }}
-  </button>
+  </RouterLink>
 </template>
 
 <script setup>
@@ -15,7 +16,8 @@ import botonIcon from '../assets/images/Boton.png'; // Asegúrate de que la ruta
 const props = defineProps({
   label: String,
   type: String,
-  disabled: Boolean
+  disabled: Boolean,
+  ruta: String
 });
 
 const handleClick = () => {

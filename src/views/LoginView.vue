@@ -11,7 +11,7 @@
       <!-- FORMULARIO -->
       <div class="caja-formulario">
         <h2 class="subtitulo">Crear nueva cuenta</h2>
-
+        
         <div class="grupo-inputs">
           <div class="campo">
             <label for="correo">Email</label>

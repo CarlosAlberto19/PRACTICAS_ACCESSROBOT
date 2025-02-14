@@ -1,7 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '../views/HomeView.vue';
 import LoginView from '@/views/LoginView.vue';
-import LoginView2 from '@/views/LoginView2.vue'; // ✅ Importamos la nueva vista
+import LoginView2 from '@/views/LoginView2.vue';
+import DatosPersonalesView from '@/views/DatosPersonalesView.vue'; // ✅ Importación corregida
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -22,9 +23,14 @@ const router = createRouter({
       component: LoginView,
     },
     {
-      path: '/login-web', // ✅ Nueva ruta para la versión web
+      path: '/login-web', // ✅ Ruta para Login Web
       name: 'login-web',
       component: LoginView2,
+    },
+    {
+      path: '/datos-personales',
+      name: 'datos-personales',
+      component: DatosPersonalesView
     }
   ],
 });
