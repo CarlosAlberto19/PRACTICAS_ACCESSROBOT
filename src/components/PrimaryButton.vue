@@ -1,13 +1,6 @@
 <template>
   <RouterLink
-<<<<<<< HEAD
-    :type="props.type" 
-    :disabled="props.disabled" 
-    @click="handleClick"
-    :to="ruta"
-=======
     :to="!disabled ? ruta : ''" 
->>>>>>> 7c7e8f1 (Nuevo mensaje más claro para el commit)
     class="primary-button"
     :class="{ 'boton-deshabilitado': disabled }"
   >
