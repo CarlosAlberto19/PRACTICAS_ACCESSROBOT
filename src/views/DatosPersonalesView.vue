@@ -305,10 +305,11 @@ const volverAtras = () => {
 =============================== */
 .telefono-container {
   display: flex;
-  align-items: center;
+  align-items: center; /* 🔥 Alinea los elementos verticalmente */
   gap: 10px;
   width: 100%;
 }
+
 .codigo-pais {
   flex: 0 0 100px;
   height: 48px;
@@ -321,7 +322,8 @@ const volverAtras = () => {
   margin: 0;
 }
 
-/* Sube un poco el input interno de PruebaInput */
+/* 🔥 Sube un poco el input para que quede alineado */
+/* 🔧 Ajuste extra en la alineación del input */
 :deep(.prueba-input.input-telefono .contenedor-input input) {
   height: 48px;
   padding: 10px 16px;
@@ -331,9 +333,8 @@ const volverAtras = () => {
   box-sizing: border-box;
   margin: 0;
   line-height: 1.2;
-  margin-top: -3px;
+  margin-top: -11px; /* 🔥 Lo subimos un poco más */
 }
-
 /* ============================
    LABELS EN NEGRITA
 =============================== */
@@ -356,4 +357,13 @@ const volverAtras = () => {
 :deep(.primary-button) {
   margin-top: 30px; /* Baja el botón para darle espacio */
 }
+
+:deep(.prueba-input .contenedor-input input) {
+  height: 50px; /* 🔥 Reduce el tamaño (antes 48px) */
+  width: 85%  ; /* 🔥 Ajusta el ancho */
+  padding: 6px 12px; /* 🔥 Ajusta el padding */
+  font-size: 14px; /* 🔥 Reduce el tamaño de la fuente */
+}
+
+
 </style>
