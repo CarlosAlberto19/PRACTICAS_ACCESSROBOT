@@ -7,6 +7,7 @@
         <router-link to="/login">Login</router-link>
         <router-link to="/login-web">Login Web</router-link>
         <router-link to="/about">About</router-link>
+        <router-link to="/crear-cuenta">Nueva Cuenta</router-link>
       </nav>
     </header>
 

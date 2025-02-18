@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue';
 import LoginView from '@/views/LoginView.vue';
 import LoginView2 from '@/views/LoginView2.vue';
 import DatosPersonalesView from '@/views/DatosPersonalesView.vue'; // ✅ Importación corregida
+import LoginViewCrearNuevaCuenta from '@/views/LoginViewCrearNuevaCuenta.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -31,6 +32,11 @@ const router = createRouter({
       path: '/datos-personales',
       name: 'datos-personales',
       component: DatosPersonalesView
+    },
+    {
+      path: '/crear-cuenta',
+      name: 'CrearCuenta',
+      component: () => import('@/views/LoginViewCrearNuevaCuenta.vue')
     }
   ],
 });
