@@ -7,17 +7,20 @@
           <img src="@/assets/images/ARturo.png" alt="Robot" class="imagen-robot" />
         </div>
   
-        <h2 class="subtitulo">Crear nueva cuenta</h2>
+        <h2 class="subtitulo negrita">Crear nueva cuenta</h2>
   
         <!-- 📌 FORMULARIO -->
         <form @submit.prevent="irADatosPersonales">
-          <PruebaInput label_input="Email" placeholder="Introduce tu email" type="email" v-model="email" />
+          <div class="grupo-input">
+            <label for="email">Email</label>
+            <PruebaInput id="email" placeholder="Introduce tu email" type="email" v-model="email" />
+          </div>
   
           <!-- Contraseña con validaciones -->
           <div class="grupo-input">
-            <label>Contraseña</label>
+            <label for="password">Contraseña</label>
             <div class="envoltorio-clave">
-              <input :type="mostrarClave ? 'text' : 'password'" v-model="password" placeholder="Crea una contraseña" />
+              <input id="password" :type="mostrarClave ? 'text' : 'password'" v-model="password" placeholder="Crea una contraseña" />
               <span class="icono material-icons" @click="togglePassword">{{ mostrarClave ? 'visibility_off' : 'visibility' }}</span>
             </div>
             <ul class="validaciones">
@@ -28,10 +31,12 @@
           </div>
   
           <!-- Checkbox de Términos -->
-          <Checkbox v-model="aceptaTerminos" label="Acepto los Términos y condiciones de uso" />
+          <div class="checkbox-container">
+            <Checkbox v-model="aceptaTerminos" label="Acepto los Términos y condiciones de uso" />
+          </div>
   
           <!-- Botón Siguiente deshabilitado hasta que se cumplan condiciones -->
-          <PrimaryButton label="Siguiente" type="submit" :disabled="!validarFormulario" />
+          <PrimaryButton class="boton-siguiente" label="Siguiente" type="submit" :disabled="!validarFormulario" />
         </form>
   
         <!-- Texto "¿Ya tienes cuenta?" -->
@@ -115,15 +120,21 @@
   
   .subtitulo {
     font-size: 20px;
-    font-weight: 500;
+    font-weight: bold;
     margin: 20px 0;
   }
   
   .grupo-input {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
     width: 100%;
+    margin-bottom: 25px;
+  }
+  
+  .grupo-input label {
+    font-size: 22px;
+    font-weight: bold;
   }
   
   .envoltorio-clave {
@@ -134,48 +145,41 @@
   
   .envoltorio-clave input {
     width: 100%;
-    padding: 12px;
-    font-size: 16px;
+    padding: 16px;
+    font-size: 18px;
     border: 1px solid #ccc;
     border-radius: 6px;
   }
   
   .icono {
     position: absolute;
-    right: 10px;
+    right: 12px;
     cursor: pointer;
-    font-size: 20px;
+    font-size: 24px;
   }
   
   .validaciones {
-    font-size: 14px;
+    font-size: 16px;
     list-style: none;
     padding: 0;
+    margin-top: 10px;
+    margin-bottom: 10px;
   }
   
   .validaciones li {
     color: red;
+    margin-bottom: 5px;
   }
   
   .validaciones li.valido {
     color: green;
   }
   
-  .texto-centrado {
-    text-align: center;
-    margin: 15px 0;
-    font-size: 16px;
+  .checkbox-container {
+    margin-bottom: 25px;
   }
   
-  .texto-olvido {
-    margin-top: 20px;
-    font-weight: bold;
-  }
-  
-  .linea-separadora {
-    margin: 15px auto;
-    width: 70%;
-    border: 0;
-    border-top: 3px solid black;
+  .boton-siguiente {
+    margin-top: 15px;
   }
   </style>
