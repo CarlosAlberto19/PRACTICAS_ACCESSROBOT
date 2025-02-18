@@ -1,5 +1,5 @@
 <template>
-  <!-- Envoltorio general para el “estilo iOS” -->
+  <!-- Envoltorio general estilo iOS -->
   <div class="ios-wrapper">
     <!-- Barra de estado (hora, señal, wifi, batería) -->
     <div class="status-bar">
@@ -20,13 +20,15 @@
       <h1 class="titulo-header">Nueva cuenta</h1>
     </header>
 
-    <!-- Contenido principal de la página (tu formulario) -->
+    <!-- Contenido principal de la página (formulario) -->
     <main class="contenedor-pagina">
       <div class="caja-formulario">
         <!-- DATOS PERSONALES -->
         <div class="cabecera">
           <h1 class="titulo">Tus datos personales</h1>
-          <p class="subtitulo">Para que podamos comunicarnos contigo si es necesario.</p>
+          <p class="subtitulo">
+            Para que podamos comunicarnos contigo si es necesario.
+          </p>
         </div>
 
         <div class="formulario">
@@ -59,24 +61,21 @@
           />
 
           <!-- Teléfono -->
-          <label class="form-group">
-            <span>Teléfono</span>
-            <div class="telefono-container">
-              <select v-model="codigoPais" class="codigo-pais">
-                <option value="+34">ES +34</option>
-                <option value="+1">US +1</option>
-                <option value="+44">UK +44</option>
-              </select>
-              <PruebaInput
-                class="input-reducido input-telefono"
-                id="telefono"
-                label_input=""
-                placeholder="000000000"
-                type="tel"
-                v-model="telefono"
-              />
-            </div>
-          </label>
+          <div class="telefono-container">
+            <select v-model="codigoPais" class="codigo-pais">
+              <option value="+34">ES +34</option>
+              <option value="+1">US +1</option>
+              <option value="+44">UK +44</option>
+            </select>
+            <PruebaInput
+              id="telefono"
+              class="input-telefono"
+              label_input=""
+              placeholder="000000000"
+              type="tel"
+              v-model="telefono"
+            />
+          </div>
         </div>
 
         <div class="separador"></div>
@@ -159,67 +158,52 @@ const volverAtras = () => {
 </script>
 
 <style scoped>
-/* 1) Permite scroll y une las barras */
-.ios-wrapper {
+/* ============================
+   ENVOLTORIO GENERAL
+=============================== */
+.web-wrapper {
   display: flex;
   flex-direction: column;
-  width: 100%;
-  /* min-height para que ocupe al menos la pantalla completa */
-  min-height: 100vh; 
-  background-color: #f2f2f2;
-  /* Permite scroll vertical si el contenido es más grande que la pantalla */
-  overflow-y: auto; 
+  min-height: 100vh;
+  background-color: #f8f9fa;
   box-sizing: border-box;
 }
 
-/* Barra de estado (hora, señal, wifi, batería) */
+/* ============================
+   STATUS BAR (hora, wifi, etc.)
+   (SIN CAMBIOS)
+=============================== */
 .status-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   height: 20px;
-  background-color: #8357E5;
+  background-color: #8357E5; /* Morado */
   color: #fff;
   padding: 0 12px;
-  /* Quita bordes redondeados para que se una con la barra siguiente */
-  border-radius: 0;
-  margin: 0; 
-}
-
-.status-time {
-  font-size: 14px;
-}
-
-.status-icons {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.icon-signal,
-.icon-wifi,
-.icon-battery {
-  font-size: 14px;
-}
-
-/* Barra superior morada */
-.header-bar {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 50px; 
-  background-color: #8357E5;
-  color: #fff;
-  padding: 0 16px;
-  /* No margen entre la status bar y la header bar */
   margin: 0;
-  border-radius: 0;
 }
 
+/* ============================
+   BARRA SUPERIOR
+   (AQUÍ HACEMOS LOS CAMBIOS)
+=============================== */
+.header-bar {
+  position: relative;      /* Para colocar el botón con position absolute */
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Centra el título en el eje horizontal */
+  height: 60px;
+  background-color: #8357E5; 
+  color: #fff;
+  padding: 0 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Botón 'Atrás' a la izquierda */
 .btn-atras {
   position: absolute;
-  left: 16px;
+  left: 20px;         /* Separa el botón del borde izquierdo */
   background: none;
   border: none;
   color: #fff;
@@ -230,30 +214,35 @@ const volverAtras = () => {
   gap: 4px;
 }
 
+/* Flecha */
 .flecha {
   font-size: 18px;
   transform: translateY(1px);
 }
 
+/* Título con texto en blanco */
 .titulo-header {
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 24px;
+  font-weight: bold;
   margin: 0;
+  color: #fff;           /* BLANCO */
 }
 
-/* Contenido principal */
+/* ============================
+   CONTENIDO PRINCIPAL
+=============================== */
 .contenedor-pagina {
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   flex: 1; 
   width: 100%;
-  /* Quita color de fondo para que se vea el gris */
-  background-color: transparent;
-  padding: 20px 0;
-  box-sizing: border-box;
+  background-color: #f8f9fa;
 }
 
+/* ============================
+   FORMULARIO EXPANDIDO Y CENTRADO
+=============================== */
 .caja-formulario {
   display: flex;
   flex-direction: column;
@@ -265,68 +254,106 @@ const volverAtras = () => {
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* Formulario */
-.formulario {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  width: 100%;
-}
-
-/* Label + contenedor de select+input */
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-/* Tlf Container */
-.telefono-container {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.codigo-pais {
-  padding: 8px;
-  font-size: 16px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  flex: 0 0 100px;
-}
-
-/* Error de validación */
-.error-texto {
-  color: red;
-  font-size: 12px;
-  margin-top: -10px;
-}
-
-/* Separador */
-.separador {
-  margin: 30px 0;
-  border-top: 2px solid #ddd;
-}
-
+/* Cabeceras dentro del formulario */
 .cabecera {
   text-align: center;
   margin-bottom: 20px;
 }
-
 .titulo {
   font-size: 36px;
   font-weight: bold;
-  margin: 0;
+  margin: 0 0 10px;
+  color: #333;
 }
-
 .subtitulo {
-  font-size: 14px;
+  font-size: 16px;
   color: #666;
   margin: 0;
 }
 
-.input-reducido {
-  font-size: 12px; /* Reduce el tamaño de la fuente en un 40% */
-  padding: 5px; /* Reduce el padding en un 40% */
+/* Separador */
+.separador {
+  margin: 30px auto;
+  width: 70%;
+  border: 0;
+  border-top: 2px solid #ddd;
+}
+
+/* ============================
+   FORMULARIO E INPUTS
+=============================== */
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 100%;
+}
+.error-texto {
+  color: red;
+  font-size: 14px;
+  margin-top: -10px;
+}
+
+/* ============================
+   TELÉFONO (select + input)
+=============================== */
+.telefono-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+.codigo-pais {
+  flex: 0 0 100px;
+  height: 48px;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  text-align: center;
+  box-sizing: border-box;
+  margin: 0;
+}
+
+/* Sube un poco el input interno de PruebaInput */
+:deep(.prueba-input.input-telefono .contenedor-input input) {
+  height: 48px;
+  padding: 10px 16px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-sizing: border-box;
+  margin: 0;
+  line-height: 1.2;
+  margin-top: -3px;
+}
+
+/* ============================
+   LABELS EN NEGRITA
+=============================== */
+:deep(.prueba-input label) {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 4px;
+}
+.form-group > span {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+/* ============================
+   BOTÓN "SIGUIENTE"
+=============================== */
+:deep(.primary-button) {
+  margin-top: 30px; /* Baja el botón para darle espacio */
 }
 </style>
