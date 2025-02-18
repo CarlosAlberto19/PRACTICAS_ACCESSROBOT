@@ -11,51 +11,31 @@
 
       <!-- 📌 FORMULARIO -->
       <form @submit.prevent="irADatosPersonales">
-        <!-- <div class="contenedor-inputs">
-          <div class="grupo-input">
-            <label for="correo">Email</label>
-            <input id="correo" type="email" placeholder="Introduce tu email" required />
-          </div>
+        <PruebaInput label_input="Email" placeholder="Introduce tu email" type="email" />
+        <PruebaInput label_input="Contraseña" placeholder="Introduce tu contraseña" type="password" />
 
-          <div class="grupo-input">
-            <label for="clave">Contraseña</label>
-            <div class="envoltorio-clave">
-              <input ref="claveInput" id="clave" type="password" placeholder="Crea una contraseña" required />
-              <span class="icono material-icons" @click="togglePassword">visibility</span>
-            </div>
-          </div>
-        </div> -->
-
-        <PruebaInput label_input="Email" placeholder="Introduce tu email" type="email"/>
-        <PruebaInput label_input="Contraseña" placeholder="Introduce tu contraseña" type="password"/>
-
-        <!-- Checkbox de Términos
-        <div class="contenedor-checkbox">
-          <label class="checkbox-personalizado">
-            <input type="checkbox" v-model="aceptaTerminos" />
-            <span class="marca"></span>
-          </label>
-          <span class="texto-checkbox">Acepto los Términos y condiciones de uso</span>
-        </div>  -->
-        <!-- ✅ Reemplazamos el checkbox manual por el componente -->
-        <Checkbox v-model="aceptaTerminos" label="Acepto los Términos y condiciones de uso" />
+        <!-- Checkbox de Términos -->
+        <Checkbox
+          v-model="aceptaTerminos"
+          label="Acepto los Términos y condiciones de uso"
+        />
 
         <!-- Botón Siguiente -->
-        <PrimaryButton 
-          label="Siguiente" 
-          type="submit" 
+        <PrimaryButton
+          label="Siguiente"
+          type="submit"
           v-model="aceptaTerminos"
           ruta="/datos-personales"
         />
-
-
       </form>
 
+      <!-- Texto "¿Ya tienes cuenta?" -->
       <p class="texto-centrado">¿Ya tienes cuenta?</p>
 
       <!-- Botón Iniciar Sesión -->
       <SecondaryButton label="Ir a iniciar sesión" type="button" @click="irALogin" />
 
+      <!-- Texto "¿Has olvidado tu contraseña?" -->
       <p class="texto-olvido"><strong>¿Has olvidado tu contraseña?</strong></p>
       <hr class="linea-separadora" />
     </div>
@@ -63,35 +43,36 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-import PrimaryButton from '@/components/PrimaryButton.vue';
-import SecondaryButton from '@/components/SecondaryButton.vue';
-import PruebaInput from '@/components/PruebaInput.vue';
-import Checkbox from '@/components/Checkbox.vue'; // ✅ Importamos el checkbox
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import PrimaryButton from '@/components/PrimaryButton.vue'
+import SecondaryButton from '@/components/SecondaryButton.vue'
+import PruebaInput from '@/components/PruebaInput.vue'
+import Checkbox from '@/components/Checkbox.vue'
 
-const router = useRouter();
-const aceptaTerminos = ref(false);
-const claveInput = ref(null);
+const router = useRouter()
+const aceptaTerminos = ref(false)
+const claveInput = ref(null)
 
-// 📌 Función para ir a DatosPersonalesView desde LoginView2
+// 📌 Función para ir a DatosPersonalesView
 const irADatosPersonales = () => {
   if (aceptaTerminos.value) {
-    router.push('/datos-personales');  // 🔥 Redirección corregida
+    router.push('/datos-personales')
   }
-};
+}
 
-// 📌 Función para ir a Login desde LoginView2
+// 📌 Función para ir a Login
 const irALogin = () => {
-  router.push('/login'); // 🔥 Redirección correcta a Login
-};
+  router.push('/login')
+}
 
 // 📌 Mostrar/Ocultar contraseña
 const togglePassword = () => {
   if (claveInput.value) {
-    claveInput.value.type = claveInput.value.type === "password" ? "text" : "password";
+    claveInput.value.type =
+      claveInput.value.type === 'password' ? 'text' : 'password'
   }
-};
+}
 </script>
 
 <style scoped>
@@ -133,7 +114,14 @@ const togglePassword = () => {
   height: auto;
 }
 
-/* 📌 INPUTS MÁS ESPACIOSOS */
+/* 📌 SUBTITULO */
+.subtitulo {
+  font-size: 20px;
+  font-weight: 500;
+  margin: 20px 0;
+}
+
+/* 📌 INPUTS MÁS ESPACIOSOS (si usas contenedor-inputs) */
 .contenedor-inputs {
   display: flex;
   flex-direction: column;
@@ -183,7 +171,7 @@ const togglePassword = () => {
 .contenedor-checkbox {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   font-size: 16px;
   margin-bottom: 20px;
 }
@@ -200,5 +188,53 @@ const togglePassword = () => {
 .texto-olvido {
   margin-top: 20px;
   font-weight: bold;
+}
+
+/* ============================
+   NUEVAS REGLAS PARA SEPARAR
+=============================== */
+
+/* Aumenta la separación entre inputs (PruebaInput) */
+:deep(.prueba-input) {
+  margin-bottom: 20px; /* Ajusta a tu gusto */
+}
+
+/* Haz los labels de PruebaInput más grandes y en negrita */
+:deep(.prueba-input label) {
+  font-size: 18px;  /* Más grande */
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+/* Aumenta el tamaño del texto dentro del input de PruebaInput (opcional) */
+:deep(.prueba-input .contenedor-input input) {
+  font-size: 16px;
+  padding: 14px; /* Ajusta a tu gusto */
+}
+
+/* Espacio extra entre el botón "Siguiente" y "¿Ya tienes cuenta?" */
+:deep(.primary-button) {
+  margin-bottom: 20px; /* Ajusta a tu gusto */
+  margin-top: 15px;    /* Si quieres un poco de espacio sobre el botón */
+}
+
+/* Centra y separa un poco el texto "¿Ya tienes cuenta?" */
+.texto-centrado {
+  margin-bottom: 10px; 
+  text-align: center;
+  font-size: 16px;
+}
+
+/* Espacio extra entre el botón "Ir a iniciar sesión" y "¿Has olvidado tu contraseña?" */
+:deep(.secondary-button) {
+  margin-bottom: 30px;
+}
+
+/* Fuerza el color de la casilla en navegadores modernos */
+:deep(input[type="checkbox"]) {
+  accent-color: #2ae89c; /* Cambia a tu color preferido */
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
 }
 </style>
