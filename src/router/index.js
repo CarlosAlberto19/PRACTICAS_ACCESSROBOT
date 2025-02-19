@@ -16,6 +16,7 @@ const router = createRouter({
     { path: '/datos-personales', name: 'datos-personales', component: DatosPersonalesView },
     { path: '/crear-cuenta', name: 'crear-cuenta', component: LoginViewCrearNuevaCuenta }, // ✅ Corregido
     { path: '/recuperar-clave', name: 'recuperar-clave', component: RecuperarClaveView }  // ✅ Nueva ruta
+    
   ],
 });
 

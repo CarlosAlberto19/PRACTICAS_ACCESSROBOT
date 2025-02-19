@@ -1,64 +1,30 @@
 <template>
-  <!-- Envoltorio general estilo iOS -->
   <div class="ios-wrapper">
-    <!-- Barra de estado (hora, señal, wifi, batería) -->
-    <div class="status-bar">
-      <span class="status-time">9:41</span>
-      <div class="status-icons">
-        <span class="icon-signal">📶</span>
-        <span class="icon-wifi">📡</span>
-        <span class="icon-battery">🔋</span>
-      </div>
-    </div>
-
-    <!-- Barra superior morada con botón 'Atrás' y título centrado -->
     <header class="header-bar">
-      <button class="btn-atras" @click="volverAtras">
-        <span class="flecha">&larr;</span>
-        Atrás
-      </button>
+      <button class="btn-atras" @click="volverAtras">← Atrás</button>
       <h1 class="titulo-header">Nueva cuenta</h1>
     </header>
 
-    <!-- Contenido principal de la página (formulario) -->
     <main class="contenedor-pagina">
       <div class="caja-formulario">
         <!-- DATOS PERSONALES -->
         <div class="cabecera">
           <h1 class="titulo">Tus datos personales</h1>
-          <p class="subtitulo">
-            Para que podamos comunicarnos contigo si es necesario.
-          </p>
+          <p class="subtitulo">Para que podamos comunicarnos contigo si es necesario.</p>
         </div>
 
         <div class="formulario">
-          <!-- Campo Nombre -->
-          <PruebaInput
-            class="input-reducido"
-            label_input="Nombre"
-            placeholder="Introduce tu nombre"
-            type="text"
-            v-model="nombre"
-          />
-          <span v-if="errorNombre" class="error-texto">⚠ Muestra de error</span>
+          <!-- Nombre -->
+          <PruebaInput label_input="Nombre" placeholder="Introduce tu nombre" type="text"
+            v-model="nombre" @input="nombre = nombre.slice(0, 30)" />
+          <span v-if="errorNombre" class="error-texto">⚠ Solo letras (máx. 30 caracteres)</span>
 
-          <!-- Campo Apellido 1 -->
-          <PruebaInput
-            class="input-reducido"
-            label_input="Primer apellido"
-            placeholder="Introduce tu primer apellido"
-            type="text"
-            v-model="apellido1"
-          />
+          <!-- Apellidos -->
+          <PruebaInput label_input="Primer apellido" placeholder="Introduce tu primer apellido" type="text"
+            v-model="apellido1" @input="apellido1 = apellido1.slice(0, 30)" />
 
-          <!-- Campo Apellido 2 -->
-          <PruebaInput
-            class="input-reducido"
-            label_input="Segundo apellido (Opcional)"
-            placeholder="Introduce tu segundo apellido"
-            type="text"
-            v-model="apellido2"
-          />
+          <PruebaInput label_input="Segundo apellido (Opcional)" placeholder="Introduce tu segundo apellido" type="text"
+            v-model="apellido2" @input="apellido2 = apellido2.slice(0, 30)" />
 
           <!-- Teléfono -->
           <div class="telefono-container">
@@ -67,15 +33,10 @@
               <option value="+1">US +1</option>
               <option value="+44">UK +44</option>
             </select>
-            <PruebaInput
-              id="telefono"
-              class="input-telefono"
-              label_input=""
-              placeholder="000000000"
-              type="tel"
-              v-model="telefono"
-            />
+            <PruebaInput id="telefono" class="input-telefono" placeholder="000000000" type="tel"
+              v-model="telefono" @input="telefono = telefono.replace(/\D/g, '').slice(0, 15)" />
           </div>
+          <span v-if="errorTelefono" class="error-texto">⚠ Número inválido (9-15 dígitos)</span>
         </div>
 
         <div class="separador"></div>
@@ -83,79 +44,89 @@
         <!-- PERSONA DE CONFIANZA -->
         <div class="cabecera">
           <h2 class="titulo">Persona de confianza (Opcional)</h2>
-          <p class="subtitulo">
-            Le enviaremos notificaciones vía SMS. Si no, deja el formulario en blanco.
-          </p>
+          <p class="subtitulo">Le enviaremos notificaciones vía SMS. Si no, deja el formulario en blanco.</p>
         </div>
 
         <div class="formulario">
           <!-- Nombre o Alias -->
-          <PruebaInput
-            class="input-reducido"
-            label_input="Nombre o Alias"
-            placeholder="Introduce el nombre"
-            type="text"
-            v-model="nombreConfianza"
-          />
+          <PruebaInput label_input="Nombre o Alias" placeholder="Introduce el nombre" type="text"
+            v-model="nombreConfianza" @input="nombreConfianza = nombreConfianza.slice(0, 30)" />
+          <span v-if="errorNombreConfianza" class="error-texto">⚠ Solo letras (máx. 30 caracteres)</span>
 
           <!-- Teléfono de confianza -->
-          <label class="form-group">
-            <span>Teléfono de confianza</span>
-            <div class="telefono-container">
-              <select v-model="codigoPaisConfianza" class="codigo-pais">
-                <option value="+34">ES +34</option>
-                <option value="+1">US +1</option>
-                <option value="+44">UK +44</option>
-              </select>
-              <PruebaInput
-                class="input-reducido input-telefono"
-                id="telefonoConfianza"
-                label_input=""
-                placeholder="000000000"
-                type="tel"
-                v-model="telefonoConfianza"
-              />
-            </div>
-          </label>
+          <div class="telefono-container">
+            <select v-model="codigoPaisConfianza" class="codigo-pais">
+              <option value="+34">ES +34</option>
+              <option value="+1">US +1</option>
+              <option value="+44">UK +44</option>
+            </select>
+            <PruebaInput class="input-telefono" id="telefonoConfianza" placeholder="000000000" type="tel"
+              v-model="telefonoConfianza" @input="telefonoConfianza = telefonoConfianza.replace(/\D/g, '').slice(0, 15)" />
+          </div>
+          <span v-if="errorTelefonoConfianza" class="error-texto">⚠ Número inválido (9-15 dígitos)</span>
         </div>
 
-        <!-- Botón de acción final -->
-        <PrimaryButton label="Siguiente" type="button" @click="validarDatos" />
+        <!-- Botón -->
+
+        <PrimaryButton  label="Siguiente" type="button" @click="irAHemosTerminado"/>
+
+};
       </div>
     </main>
   </div>
 </template>
 
+
 <script setup>
-import { ref } from 'vue'
-import PruebaInput from '@/components/PruebaInput.vue'
-import PrimaryButton from '@/components/PrimaryButton.vue'
+import { ref } from 'vue';
+import PruebaInput from '@/components/PruebaInput.vue';
+import PrimaryButton from '@/components/PrimaryButton.vue';
 
-const nombre = ref('')
-const apellido1 = ref('')
-const apellido2 = ref('')
-const telefono = ref('')
-const codigoPais = ref('+34')
 
-const nombreConfianza = ref('')
-const telefonoConfianza = ref('')
-const codigoPaisConfianza = ref('+34')
+// Variables reactivas
+const nombre = ref('');
+const apellido1 = ref('');
+const apellido2 = ref('');
+const telefono = ref('');
+const codigoPais = ref('+34');
+const nombreConfianza = ref('');
+const telefonoConfianza = ref('');
+const codigoPaisConfianza = ref('+34');
 
-const errorNombre = ref(false)
+const errorNombre = ref(false);
+const errorTelefono = ref(false);
+const errorNombreConfianza = ref(false);
+const errorTelefonoConfianza = ref(false);
 
+/* 📌 Función para validar nombres y apellidos (solo letras y espacios, máx. 30 caracteres) */
+const validarTexto = (campo) => {
+  return /^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,30}$/.test(campo.trim());
+};
+
+/* 📌 Función para validar teléfonos (solo números, 9-15 dígitos) */
+const validarTelefono = (campo) => {
+  return /^[0-9]{9,15}$/.test(campo);
+};
+
+/* 📌 Validación antes de continuar */
 const validarDatos = () => {
-  if (!nombre.value) {
-    errorNombre.value = true
-  } else {
-    errorNombre.value = false
-    console.log('Datos guardados correctamente')
-  }
-}
+  errorNombre.value = !validarTexto(nombre.value);
+  errorTelefono.value = !validarTelefono(telefono.value);
+  errorNombreConfianza.value = nombreConfianza.value ? !validarTexto(nombreConfianza.value) : false;
+  errorTelefonoConfianza.value = telefonoConfianza.value ? !validarTelefono(telefonoConfianza.value) : false;
 
+  if (!errorNombre.value && !errorTelefono.value && !errorNombreConfianza.value && !errorTelefonoConfianza.value) {
+    console.log('✅ Datos guardados correctamente');
+  }
+};
+
+/* 📌 Función para volver atrás */
 const volverAtras = () => {
-  console.log('Volver atrás')
-}
+  console.log('Volver atrás');
+};
 </script>
+
+
 
 <style scoped>
 /* ============================
@@ -324,46 +295,55 @@ const volverAtras = () => {
 
 /* 🔥 Sube un poco el input para que quede alineado */
 /* 🔧 Ajuste extra en la alineación del input */
-:deep(.prueba-input.input-telefono .contenedor-input input) {
-  height: 48px;
-  padding: 10px 16px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  box-sizing: border-box;
-  margin: 0;
-  line-height: 1.2;
-  margin-top: -11px; /* 🔥 Lo subimos un poco más */
-}
 /* ============================
-   LABELS EN NEGRITA
+   AJUSTE DEL TAMAÑO DE LOS INPUTS (-25%)
 =============================== */
-:deep(.prueba-input label) {
-  font-size: 16px;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 4px;
-}
-.form-group > span {
-  font-size: 16px;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 4px;
-}
-
-/* ============================
-   BOTÓN "SIGUIENTE"
-=============================== */
-:deep(.primary-button) {
-  margin-top: 30px; /* Baja el botón para darle espacio */
-}
-
+/* Reducción de tamaño de los inputs (-25%) */
 :deep(.prueba-input .contenedor-input input) {
-  height: 50px; /* 🔥 Reduce el tamaño (antes 48px) */
-  width: 85%  ; /* 🔥 Ajusta el ancho */
-  padding: 6px 12px; /* 🔥 Ajusta el padding */
-  font-size: 14px; /* 🔥 Reduce el tamaño de la fuente */
+  height: 32px; /* Antes 48px */
+  width: 70%; /* Reducido más */
+  padding: 5px 10px;
+  font-size: 13px;
 }
 
+/* Teléfono (select + input) - reducción 25% */
+.telefono-container {
+  gap: 6px;
+  width: 100%;
+}
 
+.codigo-pais {
+  flex: 0 0 75px; /* Antes 100px */
+  height: 32px;
+  font-size: 13px;
+  padding: 6px;
+}
+
+:deep(.prueba-input.input-telefono .contenedor-input input) {
+  height: 32px;
+  font-size: 13px;
+  padding: 6px 8px;
+}
+
+/* Labels ajustados */
+:deep(.prueba-input label), .form-group > span {
+  font-size: 13px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 2px;
+}
+
+/* Botón "Siguiente" - Separado mejor */
+:deep(.primary-button) {
+  margin-top: 15px;
+}
+
+/* Mensajes de error */
+.error-texto {
+  color: red;
+  font-size: 12px;
+  margin-top: -8px;
+}
 </style>
+
+

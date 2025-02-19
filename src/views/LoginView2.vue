@@ -57,11 +57,11 @@
 
         <!-- Botón Siguiente (habilitado solo si todo es válido) -->
         <PrimaryButton
-            label="Siguiente"
-            type="submit"
-            :disabled="!validarFormulario"
-            :ruta="'/datos-personales'"
-          />
+      label="Siguiente"
+      type="submit"
+      :disabled="!validarFormulario"
+      :ruta="'/datos-personales'"
+    />
 
       </form>
 
