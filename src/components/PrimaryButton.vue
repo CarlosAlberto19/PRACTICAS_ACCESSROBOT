@@ -1,19 +1,18 @@
 <template>
-  <RouterLink
-    :to="!disabled ? ruta : ''" 
-    class="primary-button"
-    :class="{ 'boton-deshabilitado': disabled }"
-  >
-    {{ props.label }}
+  <RouterLink :to="!disabled ? ruta : ''" class="primary-button">
+    {{ label }}
   </RouterLink>
+
 </template>
 
 <script setup>
 const props = defineProps({
   label: String,
-  type: String,
   disabled: Boolean,
-  ruta: String
+  ruta: {
+    type: String,
+    default: '/' // ✅ Evita valores undefined o vacíos
+  }
 });
 </script>
 
@@ -21,7 +20,8 @@ const props = defineProps({
 .primary-button {
   width: 343px;
   height: 50px;
-  background: linear-gradient(90deg, #A078F4, #7A40E0); /* 🔥 Ajuste del gradiente */
+  background: linear-gradient(90deg, #A078F4, #7A40E0);
+  /* 🎨 Diseño moderno */
   border: none;
   color: white;
   font-size: 18px;
@@ -37,10 +37,13 @@ const props = defineProps({
   text-decoration: none;
 }
 
-/* 🔥 Estilo para cuando el botón está deshabilitado */
+/* 🔒 Botón deshabilitado */
 .boton-deshabilitado {
-  pointer-events: none; /* 🔥 Evita que el usuario haga clic */
-  opacity: 0.5; /* 🔥 Visualmente más tenue */
-  background: gray; /* 🔥 Para que se vea claramente deshabilitado */
+  pointer-events: none;
+  /* ❌ Evita clics */
+  opacity: 0.5;
+  /* 🌫 Visualmente más tenue */
+  background: gray;
+  /* 📌 Indica estado inactivo */
 }
 </style>
