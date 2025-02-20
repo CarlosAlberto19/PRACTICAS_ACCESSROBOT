@@ -138,6 +138,18 @@ const validarDatos = () => {
 const volverAtras = () => {
   console.log('Volver atrás');
 };
+
+const irADatosPersonales = () => {
+  validarEmail(); // ✅ Aseguramos que el email se valide antes de continuar
+
+  if (!errorEmail.value && validarFormulario.value) {
+    router.push('/datos-personales');
+  }
+};
+
+
+
+
 </script>
 
 
