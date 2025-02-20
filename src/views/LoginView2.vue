@@ -12,36 +12,34 @@
       <!-- FORMULARIO -->
       <form @submit.prevent="irADatosPersonales">
         <!-- EMAIL -->
-        <PruebaInput  label_input="Email" placeholder="Introduce tu email" type="email" v-model="email" />
+        <PruebaInput label_input="Email" placeholder="Introduce tu email" type="email" v-model="email"
+          @input="email = email.trim()" />
+        <span v-if="errorEmail" class="error-texto">⚠ Introduce un email válido</span>
+
 
         <!-- CONTRASEÑA con validaciones -->
-        <PruebaInput
-          label_input="Contraseña"
-          placeholder="Introduce tu contraseña"
-          type="password"
-          class="contenedor-contraseña"
-          v-model="password"
-        />
+        <PruebaInput label_input="Contraseña" placeholder="Introduce tu contraseña" type="password"
+          class="contenedor-contraseña" v-model="password" />
 
         <!-- Detalles de validación de la contraseña -->
         <div class="grupo-input">
           <label class="label-contraseña">Tu contraseña debe contener:</label>
           <ul class="validaciones">
             <!-- 8 a 16 caracteres -->
-            <li :class="validacionClase(password.length >= 8 && password.length <= 16)">
-              <span>{{ validacionIcono(password.length >= 8 && password.length <= 16) }}</span>
+            <li :class="tieneMayusMinus ? 'valido' : (password.length > 0 ? 'error' : 'pendiente')">
+              mayúsculas y minúsculas
+            </li>
+            <!-- Mayúsculas y minúsculas -->
+            <li
+              :class="password.length === 0 ? 'pendiente' : (password.length >= 8 && password.length <= 16 ? 'valido' : 'error')">
               entre 8 y 16 caracteres
             </li>
 
-            <!-- Mayúsculas y minúsculas -->
-            <li :class="validacionClase(tieneMayusMinus)">
-              <span>{{ validacionIcono(tieneMayusMinus) }}</span>
+            <li :class="password.length === 0 ? 'pendiente' : (tieneMayusMinus ? 'valido' : 'error')">
               mayúsculas y minúsculas
             </li>
 
-            <!-- Al menos un número -->
-            <li :class="validacionClase(tieneNumero)">
-              <span>{{ validacionIcono(tieneNumero) }}</span>
+            <li :class="password.length === 0 ? 'pendiente' : (tieneNumero ? 'valido' : 'error')">
               al menos un número
             </li>
           </ul>
@@ -51,12 +49,7 @@
         <Checkbox v-model="aceptaTerminos" label="Acepto los Términos y condiciones de uso" />
 
         <!-- Botón Siguiente (habilitado solo si todo es válido) -->
-        <PrimaryButton
-      label="Siguiente"
-      type="submit"
-      :disabled="!validarFormulario"
-      :ruta="'/datos-personales'"
-    />
+        <PrimaryButton label="Siguiente" type="submit" :disabled="!validarFormulario" :ruta="'/datos-personales'" />
 
       </form>
       <hr class="linea-separadora" />
@@ -69,7 +62,7 @@
         <strong>¿Has olvidado tu contraseña?</strong>
       </p>
 
-      
+
     </div>
   </div>
 </template>
@@ -104,8 +97,14 @@ const validarFormulario = computed(() =>
 );
 
 // Funciones para cambiar estilos de validación dinámicamente
-const validacionClase = (condicion) => (condicion ? 'valido' : 'error');
-const validacionIcono = (condicion) => (condicion ? '✅' : '❌');
+const validacionClase = (condicion) => {
+  return condicion ? 'valido' : 'error';
+};
+
+const validacionIcono = (condicion) => {
+  return condicion ? '✔' : '!';
+};
+
 
 // Navegación
 const irADatosPersonales = () => {
@@ -124,6 +123,7 @@ const irARecuperarContrasena = () => {
 </script>
 
 <style scoped>
+/* ============================ */
 /* ============================ */
 /* CONTENEDOR PRINCIPAL */
 /* ============================ */
@@ -175,6 +175,119 @@ const irARecuperarContrasena = () => {
 }
 
 /* ============================ */
+/* CABECERA */
+/* ============================ */
+.cabecera {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.titulo {
+  font-size: 36px;
+  font-weight: bold;
+}
+
+.imagen-robot {
+  width: 180px;
+  height: auto;
+}
+
+/* ============================ */
+/* SUBTITULO */
+/* ============================ */
+.subtitulo {
+  font-size: 20px;
+  font-weight: 500;
+  margin: 20px 0;
+}
+
+
+/* ============================ */
+/* VALIDACIONES CONTRASEÑA ESTILO EXACTO */
+/* ============================ */
+.validaciones {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 16px;
+}
+
+/* ✅ CORRECTO: Círculo verde con check blanco */
+.validaciones li.valido::before {
+  content: "✔";
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background-color: green;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* ⚪ PENDIENTE: Círculo blanco con borde gris y check gris */
+.validaciones li.pendiente::before {
+  content: "✔";
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background-color: white;
+  border: 2px solid gray;
+  color: gray;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* ❌ INCORRECTO: Círculo rojo con "!" blanco */
+.validaciones li.error::before {
+  content: "!";
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background-color: red;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* 💥 ELIMINAMOS LA SEGUNDA COLUMNA (YA NO HAY "X") */
+.validaciones li span {
+  display: none;
+}
+
+
+
+/* ============================ */
+/* "ACEPTO LOS TÉRMINOS" SUBRAYADO */
+/* ============================ */
+.checkbox-container label {
+  text-decoration: underline;
+}
+
+/* ============================ */
+/* SEPARACIÓN ENTRE CHECKBOX Y BOTÓN */
+/* ============================ */
+:deep(.checkbox-container) {
+  margin-top: 20px;
+}
+
+:deep(.primary-button) {
+  margin-top: 30px;
+}
+
+
+
+
+
+/* ============================ */
 /* ANIMACIONES EN LOS INPUTS */
 /* (Mantenemos el tamaño original) */
 /* ============================ */
@@ -185,7 +298,8 @@ const irARecuperarContrasena = () => {
 
 /* 🔥 EFECTO CUANDO EL INPUT ESTÁ EN FOCO 🔥 */
 :deep(.prueba-input .contenedor-input input) {
-  height: 50px; /* ⬅️ Volvemos al tamaño original */
+  height: 50px;
+  /* ⬅️ Volvemos al tamaño original */
   width: 100%;
   padding: 10px 14px;
   font-size: 16px;
@@ -196,7 +310,8 @@ const irARecuperarContrasena = () => {
 
 /* 🔥 EFECTO CUANDO EL INPUT TIENE FOCO 🔥 */
 :deep(.prueba-input .contenedor-input input:focus) {
-  border-color: #7A40E0; /* Morado */
+  border-color: #7A40E0;
+  /* Morado */
   box-shadow: 0 0 6px rgba(122, 64, 224, 0.6);
   outline: none;
 }
@@ -208,7 +323,8 @@ const irARecuperarContrasena = () => {
 }
 
 :deep(.prueba-input .contenedor-input input:focus::placeholder) {
-  color: #7A40E0; /* Morado más intenso */
+  color: #7A40E0;
+  /* Morado más intenso */
   font-weight: bold;
 }
 
@@ -333,4 +449,3 @@ const irARecuperarContrasena = () => {
   cursor: pointer;
 }
 </style>
-
