@@ -1,7 +1,8 @@
 <template>
   <div class="ios-wrapper">
     <header class="header-bar">
-      <button class="btn-atras" @click="volverAtras">← Atrás</button>
+      <button class="btn-atras" @click="irAtras">← Atrás</button>
+
       <h1 class="titulo-header">Nueva cuenta</h1>
     </header>
 
@@ -70,7 +71,7 @@
 
         <PrimaryButton  label="Siguiente" type="button" @click="irAHemosTerminado"/>
 
-};
+
       </div>
     </main>
   </div>
@@ -81,6 +82,19 @@
 import { ref } from 'vue';
 import PruebaInput from '@/components/PruebaInput.vue';
 import PrimaryButton from '@/components/PrimaryButton.vue';
+import { useRouter } from 'vue-router';
+
+
+const router = useRouter();
+
+const irAtras = () => {
+  router.go(-1);
+};
+
+const irAHemosTerminado = () => {
+  router.push('/hemos-terminado');
+};
+
 
 
 // Variables reactivas
@@ -221,7 +235,7 @@ const volverAtras = () => {
   width: 750px; 
   background: white;
   padding: 50px;
-  border-radius: 12px;
+  border-radius: 15px;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
@@ -237,7 +251,7 @@ const volverAtras = () => {
   color: #333;
 }
 .subtitulo {
-  font-size: 16px;
+  font-size: 18px;
   color: #666;
   margin: 0;
 }
@@ -257,7 +271,8 @@ const volverAtras = () => {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  width: 100%;
+  width: 70%;
+  align-content: center;
 }
 .form-group {
   display: flex;
@@ -277,7 +292,7 @@ const volverAtras = () => {
 .telefono-container {
   display: flex;
   align-items: center; /* 🔥 Alinea los elementos verticalmente */
-  gap: 10px;
+  gap: 50px;
   width: 100%;
 }
 
@@ -293,57 +308,90 @@ const volverAtras = () => {
   margin: 0;
 }
 
-/* 🔥 Sube un poco el input para que quede alineado */
-/* 🔧 Ajuste extra en la alineación del input */
 /* ============================
    AJUSTE DEL TAMAÑO DE LOS INPUTS (-25%)
 =============================== */
-/* Reducción de tamaño de los inputs (-25%) */
 :deep(.prueba-input .contenedor-input input) {
-  height: 32px; /* Antes 48px */
-  width: 70%; /* Reducido más */
-  padding: 5px 10px;
-  font-size: 13px;
+  height: 45px; /* Antes 32px (+15%) */
+  width: 90%; /* Antes 70% (+15%) */
+  padding: 6px 12px;
+  font-size: 14px;
+  border: 1px solid #ccc; /* Borde normal */
+  transition: all 0.3s ease-in-out;
 }
 
-/* Teléfono (select + input) - reducción 25% */
+:deep(.prueba-input .contenedor-input input:focus) {
+  border-color: #7A40E0; /* 🔥 Color morado (puedes cambiarlo) */
+  box-shadow: 0 0 5px rgba(122, 64, 224, 0.6); /* Efecto de brillo */
+  outline: none; /* Elimina el borde azul por defecto */
+}
+
+/* 📌 Placeholder más visible por defecto */
+:deep(.prueba-input .contenedor-input input::placeholder) {
+  color: #555; /* Color más oscuro */
+  font-weight: bold; /* Negrita para mayor visibilidad */
+  opacity: 1; /* Asegura que se vea bien en todos los navegadores */
+  transition: color 0.3s ease-in-out;
+}
+
+/* Teléfono (select + input) - aumento de tamaño */
 .telefono-container {
-  gap: 6px;
-  width: 100%;
+  gap: 8px;
+  width: 130%;
 }
 
 .codigo-pais {
-  flex: 0 0 75px; /* Antes 100px */
-  height: 32px;
-  font-size: 13px;
+  flex: 0 0 85px; /* Antes 75px (+15%) */
+  height: 37px;
+  font-size: 14px;
   padding: 6px;
 }
 
 :deep(.prueba-input.input-telefono .contenedor-input input) {
-  height: 32px;
-  font-size: 13px;
-  padding: 6px 8px;
+  height: 37px;
+  font-size: 14px;
+  padding: 6px 10px;
 }
 
-/* Labels ajustados */
-:deep(.prueba-input label), .form-group > span {
-  font-size: 13px;
+/* ============================
+   AJUSTE DEL TAMAÑO DE LAS ETIQUETAS (16px)
+=============================== */
+:deep(.prueba-input label), 
+.form-group > span {
+  font-size: 16px; /* Antes 13px */
   font-weight: bold;
   color: #333;
-  margin-bottom: 2px;
+  margin-bottom: 4px;
 }
 
-/* Botón "Siguiente" - Separado mejor */
+/* ============================
+   ESPACIADO EXTRA ENTRE EL ÚLTIMO INPUT Y "SIGUIENTE"
+=============================== */
 :deep(.primary-button) {
-  margin-top: 15px;
+  margin-top: 40px; /* Antes 15px (+espaciado) */
 }
 
-/* Mensajes de error */
-.error-texto {
-  color: red;
-  font-size: 12px;
-  margin-top: -8px;
+/* Efecto de iluminación en el placeholder cuando se hace focus en el input */
+:deep(.prueba-input .contenedor-input input::placeholder) {
+  color: #999; /* Color base del placeholder */
+  transition: color 0.3s ease-in-out;
 }
+
+:deep(.prueba-input .contenedor-input input:focus::placeholder) {
+  color: #555; /* Color más oscuro al hacer clic */
+  font-weight: bold; /* Se vuelve más grueso */
+}
+
+/* Separador más marcado */
+.separador {
+  margin: 30px auto;
+  width: 70%;
+  border: 0;
+  border-top: 3px solid #7A40E0; /* 💜 Más gruesa y en morado */
+  opacity: 0.8; /* 🔥 Aumentamos la opacidad */
+}
+
+
 </style>
 
 
