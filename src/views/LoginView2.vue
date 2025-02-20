@@ -12,12 +12,7 @@
       <!-- FORMULARIO -->
       <form @submit.prevent="irADatosPersonales">
         <!-- EMAIL -->
-        <PruebaInput
-          label_input="Email"
-          placeholder="Introduce tu email"
-          type="email"
-          v-model="email"
-        />
+        <PruebaInput  label_input="Email" placeholder="Introduce tu email" type="email" v-model="email" />
 
         <!-- CONTRASEÑA con validaciones -->
         <PruebaInput
@@ -64,7 +59,7 @@
     />
 
       </form>
-
+      <hr class="linea-separadora" />
       <!-- Texto "¿Ya tienes cuenta?" + Botón Iniciar Sesión -->
       <p class="texto-centrado">¿Ya tienes cuenta?</p>
       <SecondaryButton label="Ir a iniciar sesión" type="button" @click="irALogin" />
@@ -74,7 +69,7 @@
         <strong>¿Has olvidado tu contraseña?</strong>
       </p>
 
-      <hr class="linea-separadora" />
+      
     </div>
   </div>
 </template>
@@ -129,7 +124,9 @@ const irARecuperarContrasena = () => {
 </script>
 
 <style scoped>
+/* ============================ */
 /* CONTENEDOR PRINCIPAL */
+/* ============================ */
 .contenedor-pagina {
   display: flex;
   justify-content: center;
@@ -150,28 +147,114 @@ const irARecuperarContrasena = () => {
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
+/* ============================ */
 /* CABECERA */
+/* ============================ */
 .cabecera {
   text-align: center;
   margin-bottom: 20px;
 }
+
 .titulo {
   font-size: 36px;
   font-weight: bold;
 }
+
 .imagen-robot {
   width: 180px;
   height: auto;
 }
 
+/* ============================ */
 /* SUBTITULO */
+/* ============================ */
 .subtitulo {
   font-size: 20px;
   font-weight: 500;
   margin: 20px 0;
 }
 
+/* ============================ */
+/* ANIMACIONES EN LOS INPUTS */
+/* (Mantenemos el tamaño original) */
+/* ============================ */
+:deep(.prueba-input .contenedor-input) {
+  position: relative;
+  width: 100%;
+}
+
+/* 🔥 EFECTO CUANDO EL INPUT ESTÁ EN FOCO 🔥 */
+:deep(.prueba-input .contenedor-input input) {
+  height: 50px; /* ⬅️ Volvemos al tamaño original */
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  transition: all 0.3s ease-in-out;
+}
+
+/* 🔥 EFECTO CUANDO EL INPUT TIENE FOCO 🔥 */
+:deep(.prueba-input .contenedor-input input:focus) {
+  border-color: #7A40E0; /* Morado */
+  box-shadow: 0 0 6px rgba(122, 64, 224, 0.6);
+  outline: none;
+}
+
+/* 🔥 EFECTO EN EL PLACEHOLDER AL HACER CLICK 🔥 */
+:deep(.prueba-input .contenedor-input input::placeholder) {
+  color: #666;
+  transition: color 0.3s ease-in-out, font-weight 0.3s;
+}
+
+:deep(.prueba-input .contenedor-input input:focus::placeholder) {
+  color: #7A40E0; /* Morado más intenso */
+  font-weight: bold;
+}
+
+/* ============================ */
+/* ICONO DEL OJO (NO SE DESALINEA) */
+/* ============================ */
+:deep(.icono-ojo) {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 20px;
+  color: #666;
+  cursor: pointer;
+  transition: color 0.3s ease-in-out;
+}
+
+:deep(.icono-ojo:hover) {
+  color: #333;
+}
+
+/* ============================ */
+/* SEPARACIÓN ENTRE INPUTS */
+/* ============================ */
+:deep(.prueba-input) {
+  margin-bottom: 20px;
+}
+
+:deep(.prueba-input label) {
+  font-weight: bold;
+}
+
+/* ============================ */
+/* SEPARACIÓN ENTRE CHECKBOX Y BOTÓN */
+/* ============================ */
+:deep(.checkbox-container) {
+  margin-top: 20px;
+}
+
+:deep(.primary-button) {
+  margin-top: 30px;
+}
+
+/* ============================ */
 /* SEPARADOR */
+/* ============================ */
 .linea-separadora {
   margin: 15px auto;
   width: 70%;
@@ -179,21 +262,27 @@ const irARecuperarContrasena = () => {
   border-top: 3px solid black;
 }
 
-/* TEXTO "¿HAS OLVIDADO TU CONTRASEÑA?" */
-.texto-olvido {
-  margin-top: 20px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
+/* ============================ */
 /* TEXTO “¿YA TIENES CUENTA?” */
+/* ============================ */
 .texto-centrado {
   margin-bottom: 10px;
   text-align: center;
   font-size: 16px;
 }
 
-/* Estilos del grupo input */
+/* ============================ */
+/* TEXTO "¿HAS OLVIDADO TU CONTRASEÑA?" */
+/* ============================ */
+.texto-olvido {
+  margin-top: 20px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* ============================ */
+/* ESTILOS DEL GRUPO INPUT */
+/* ============================ */
 .grupo-input {
   display: flex;
   flex-direction: column;
@@ -202,10 +291,14 @@ const irARecuperarContrasena = () => {
   margin-bottom: 25px;
 }
 
-/* Estilos de validaciones */
+/* ============================ */
+/* ESTILOS DE VALIDACIONES */
+/* ============================ */
 .label-contraseña {
   font-weight: bold;
   margin-bottom: 10px;
+  margin-top: 15px;
+  gap: 10px;
 }
 
 .validaciones {
@@ -230,7 +323,9 @@ const irARecuperarContrasena = () => {
   color: red;
 }
 
-/* Forzamos color del checkbox */
+/* ============================ */
+/* FORZAR COLOR DEL CHECKBOX */
+/* ============================ */
 :deep(input[type="checkbox"]) {
   accent-color: #2ae89c;
   width: 20px;
@@ -238,3 +333,4 @@ const irARecuperarContrasena = () => {
   cursor: pointer;
 }
 </style>
+

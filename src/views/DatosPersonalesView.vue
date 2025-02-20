@@ -378,7 +378,7 @@ const volverAtras = () => {
 }
 
 :deep(.prueba-input .contenedor-input input:focus::placeholder) {
-  color: #555; /* Color más oscuro al hacer clic */
+  color: #7A40E0; /* Color más oscuro al hacer clic */
   font-weight: bold; /* Se vuelve más grueso */
 }
 
