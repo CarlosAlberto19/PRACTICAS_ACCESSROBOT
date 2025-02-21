@@ -2,7 +2,6 @@
   <div class="ios-wrapper">
     <header class="header-bar">
       <button class="btn-atras" @click="irAtras">← Atrás</button>
-
       <h1 class="titulo-header">Nueva cuenta</h1>
     </header>
 
@@ -16,18 +15,38 @@
 
         <div class="formulario">
           <!-- Nombre -->
-          <PruebaInput label_input="Nombre" placeholder="Introduce tu nombre" type="text"
-            v-model="nombre" @input="nombre = nombre.slice(0, 30)" />
+          <PruebaInput 
+            label_input="Nombre" 
+            placeholder="Introduce tu nombre" 
+            type="text"
+            v-model="nombre" 
+            @input="validarNombre" 
+            @blur="validarNombre"
+          />
           <span v-if="errorNombre" class="error-texto">⚠ Solo letras (máx. 30 caracteres)</span>
 
           <!-- Apellidos -->
-          <PruebaInput label_input="Primer apellido" placeholder="Introduce tu primer apellido" type="text"
-            v-model="apellido1" @input="apellido1 = apellido1.slice(0, 30)" />
+          <PruebaInput 
+            label_input="Primer apellido" 
+            placeholder="Introduce tu primer apellido" 
+            type="text"
+            v-model="apellido1" 
+            @input="validarApellido1"
+            @blur="validarApellido1"
+          />
+          <span v-if="errorApellido1" class="error-texto">⚠ Solo letras (máx. 30 caracteres)</span>
 
-          <PruebaInput label_input="Segundo apellido (Opcional)" placeholder="Introduce tu segundo apellido" type="text"
-            v-model="apellido2" @input="apellido2 = apellido2.slice(0, 30)" />
+          <PruebaInput 
+            label_input="Segundo apellido (Opcional)" 
+            placeholder="Introduce tu segundo apellido" 
+            type="text"
+            v-model="apellido2" 
+            @input="validarApellido2"
+            @blur="validarApellido2"
+          />
+          <span v-if="errorApellido2" class="error-texto">⚠ Solo letras (máx. 30 caracteres)</span>
 
-          <!-- Teléfono -->
+          <!-- 📌 Teléfono principal -->
           <div class="telefono-container">
             <select v-model="codigoPais" class="codigo-pais">
               <option value="+34">ES +34</option>
@@ -35,7 +54,8 @@
               <option value="+44">UK +44</option>
             </select>
             <PruebaInput id="telefono" class="input-telefono" placeholder="000000000" type="tel"
-              v-model="telefono" @input="telefono = telefono.replace(/\D/g, '').slice(0, 15)" />
+              v-model="telefono" @input="telefono = limpiarTelefono(telefono)" @blur="validarTelefono"
+            />
           </div>
           <span v-if="errorTelefono" class="error-texto">⚠ Número inválido (9-15 dígitos)</span>
         </div>
@@ -50,11 +70,17 @@
 
         <div class="formulario">
           <!-- Nombre o Alias -->
-          <PruebaInput label_input="Nombre o Alias" placeholder="Introduce el nombre" type="text"
-            v-model="nombreConfianza" @input="nombreConfianza = nombreConfianza.slice(0, 30)" />
+          <PruebaInput 
+            label_input="Nombre o Alias" 
+            placeholder="Introduce el nombre" 
+            type="text"
+            v-model="nombreConfianza" 
+            @input="validarNombreConfianza" 
+            @blur="validarNombreConfianza"
+          />
           <span v-if="errorNombreConfianza" class="error-texto">⚠ Solo letras (máx. 30 caracteres)</span>
 
-          <!-- Teléfono de confianza -->
+          <!-- 📌 Teléfono de confianza -->
           <div class="telefono-container">
             <select v-model="codigoPaisConfianza" class="codigo-pais">
               <option value="+34">ES +34</option>
@@ -62,42 +88,40 @@
               <option value="+44">UK +44</option>
             </select>
             <PruebaInput class="input-telefono" id="telefonoConfianza" placeholder="000000000" type="tel"
-              v-model="telefonoConfianza" @input="telefonoConfianza = telefonoConfianza.replace(/\D/g, '').slice(0, 15)" />
+              v-model="telefonoConfianza" @input="telefonoConfianza = limpiarTelefono(telefonoConfianza)" @blur="validarTelefonoConfianza"
+            />
           </div>
           <span v-if="errorTelefonoConfianza" class="error-texto">⚠ Número inválido (9-15 dígitos)</span>
         </div>
 
         <!-- Botón -->
-
-        <PrimaryButton  label="Siguiente" type="button" @click="irAHemosTerminado"/>
-
-
+        <PrimaryButton label="Siguiente" type="button" :disabled="!formularioValido" @click="irAHemosTerminado"/>
       </div>
     </main>
   </div>
 </template>
 
-
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import PruebaInput from '@/components/PruebaInput.vue';
 import PrimaryButton from '@/components/PrimaryButton.vue';
 import { useRouter } from 'vue-router';
 
-
 const router = useRouter();
-
-const irAtras = () => {
-  router.go(-1);
-};
+const irAtras = () => router.go(-1);
 
 const irAHemosTerminado = () => {
-  router.push('/hemos-terminado');
+  // Validamos todos los campos antes de avanzar
+  validarFormulario();
+  if (formularioValido.value) {
+    router.push('/hemos-terminado');
+  } else {
+    console.log('❌ Hay errores en el formulario');
+    // Aquí podrías mostrar mensajes de error en la UI
+  }
 };
 
-
-
-// Variables reactivas
+// 📌 Variables reactivas para los campos del formulario
 const nombre = ref('');
 const apellido1 = ref('');
 const apellido2 = ref('');
@@ -107,49 +131,97 @@ const nombreConfianza = ref('');
 const telefonoConfianza = ref('');
 const codigoPaisConfianza = ref('+34');
 
+// 📌 Variables para el estado de error de cada campo
 const errorNombre = ref(false);
+const errorApellido1 = ref(false);
+const errorApellido2 = ref(false);
 const errorTelefono = ref(false);
 const errorNombreConfianza = ref(false);
 const errorTelefonoConfianza = ref(false);
 
-/* 📌 Función para validar nombres y apellidos (solo letras y espacios, máx. 30 caracteres) */
+// 📌 Función para validar nombres y apellidos (mínimo 2, máximo 30 caracteres)
 const validarTexto = (campo) => {
-  return /^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,30}$/.test(campo.trim());
+  const texto = campo.trim();
+  return texto.length >= 2 && texto.length <= 30 && /^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$/.test(texto);
 };
 
-/* 📌 Función para validar teléfonos (solo números, 9-15 dígitos) */
-const validarTelefono = (campo) => {
-  return /^[0-9]{9,15}$/.test(campo);
+// 📌 Función para limitar en tiempo real el texto ingresado (nombres y apellidos)
+const limitarTexto = (campo) =>
+  campo.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ ]/g, '').slice(0, 30);
+
+// 📌 Función para limpiar el teléfono
+// Se permiten dígitos y los siguientes caracteres especiales: +, -, (, ), espacio
+// Se limita la longitud total a 15 caracteres.
+const limpiarTelefono = (campo) =>
+  campo.replace(/[^0-9+\-() ]/g, '').slice(0, 15);
+
+// 📌 Validación en tiempo real del teléfono personal
+const validarTelefono = () => {
+  telefono.value = limpiarTelefono(telefono.value);
+  // Se cuentan solo los dígitos para validar la cantidad
+  const digits = telefono.value.replace(/[^0-9]/g, '');
+  errorTelefono.value = digits.length < 9 || digits.length > 15;
 };
 
-/* 📌 Validación antes de continuar */
-const validarDatos = () => {
+// 📌 Validación en tiempo real del teléfono de confianza (opcional)
+const validarTelefonoConfianza = () => {
+  telefonoConfianza.value = limpiarTelefono(telefonoConfianza.value);
+  const digits = telefonoConfianza.value.replace(/[^0-9]/g, '');
+  // Solo se valida si se ha ingresado algo
+  errorTelefonoConfianza.value =
+    telefonoConfianza.value.length > 0 && (digits.length < 9 || digits.length > 15);
+};
+
+// 📌 Validaciones individuales para los campos de texto
+const validarNombre = () => {
+  nombre.value = limitarTexto(nombre.value);
   errorNombre.value = !validarTexto(nombre.value);
-  errorTelefono.value = !validarTelefono(telefono.value);
-  errorNombreConfianza.value = nombreConfianza.value ? !validarTexto(nombreConfianza.value) : false;
-  errorTelefonoConfianza.value = telefonoConfianza.value ? !validarTelefono(telefonoConfianza.value) : false;
-
-  if (!errorNombre.value && !errorTelefono.value && !errorNombreConfianza.value && !errorTelefonoConfianza.value) {
-    console.log('✅ Datos guardados correctamente');
-  }
 };
 
-/* 📌 Función para volver atrás */
-const volverAtras = () => {
-  console.log('Volver atrás');
+const validarApellido1 = () => {
+  apellido1.value = limitarTexto(apellido1.value);
+  errorApellido1.value = !validarTexto(apellido1.value);
 };
 
-const irADatosPersonales = () => {
-  validarEmail(); // ✅ Aseguramos que el email se valide antes de continuar
-
-  if (!errorEmail.value && validarFormulario.value) {
-    router.push('/datos-personales');
-  }
+const validarApellido2 = () => {
+  apellido2.value = limitarTexto(apellido2.value);
+  errorApellido2.value =
+    apellido2.value.length > 0 && !validarTexto(apellido2.value);
 };
 
+const validarNombreConfianza = () => {
+  nombreConfianza.value = limitarTexto(nombreConfianza.value);
+  errorNombreConfianza.value =
+    nombreConfianza.value.length > 0 && !validarTexto(nombreConfianza.value);
+};
 
+// 📌 Computado para determinar si el formulario es válido
+const formularioValido = computed(() => {
+  // Se obtienen solo los dígitos para la validación del teléfono
+  const digitsTelefono = telefono.value.replace(/[^0-9]/g, '');
+  const digitsTelefonoConfianza = telefonoConfianza.value.replace(/[^0-9]/g, '');
+  return (
+    !errorNombre.value &&
+    !errorApellido1.value &&
+    !errorApellido2.value &&
+    !errorTelefono.value &&
+    digitsTelefono.length >= 9 &&
+    digitsTelefono.length <= 15 &&
+    // Campos opcionales: si se ingresa algo, debe ser válido
+    (!nombreConfianza.value || !errorNombreConfianza.value) &&
+    (!telefonoConfianza.value || !errorTelefonoConfianza.value)
+  );
+});
 
-
+// 📌 Función para validar todos los campos del formulario
+const validarFormulario = () => {
+  validarNombre();
+  validarApellido1();
+  validarApellido2();
+  validarTelefono();
+  validarNombreConfianza();
+  validarTelefonoConfianza();
+};
 </script>
 
 
@@ -403,7 +475,17 @@ const irADatosPersonales = () => {
   opacity: 0.8; /* 🔥 Aumentamos la opacidad */
 }
 
+.error-texto {
+  color: red;
+  font-size: 14px;
+  margin-top: 4px;
+}
 
+/* Borde rojo cuando hay error */
+:deep(.prueba-input input.error) {
+  border-color: red;
+  box-shadow: 0 0 4px rgba(255, 0, 0, 0.5);
+}
 </style>
 
 
