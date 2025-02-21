@@ -1,5 +1,5 @@
 <script setup>
-import { ref, defineProps, defineEmits, watch } from 'vue';
+import { ref, watch } from 'vue';
 
 // 📌 Definir props con valores por defecto
 const props = defineProps({

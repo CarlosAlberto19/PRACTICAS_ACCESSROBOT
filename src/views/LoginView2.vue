@@ -27,22 +27,17 @@
         <div class="grupo-input">
           <label class="label-contraseña">Tu contraseña debe contener:</label>
           <ul class="validaciones">
-            <!-- 8 a 16 caracteres -->
-           <li :class="tieneMayusMinus ? 'valido' : (password.length > 0 ? 'error' : 'pendiente')">
-  mayúsculas y minúsculas
-</li>
-            <!-- Mayúsculas y minúsculas -->
-            <li :class="validacionClase(tieneMayusMinus)">
-              <span>{{ validacionIcono(tieneMayusMinus) }}</span>
-              mayúsculas y minúsculas
-            </li>
+  <li :class="longitudCorrecta ? 'valido' : (password.length > 0 ? 'error' : 'pendiente')">
+    entre 8 y 16 caracteres
+  </li>
+  <li :class="tieneMayusMinus ? 'valido' : (password.length > 0 ? 'error' : 'pendiente')">
+    mayúsculas y minúsculas
+  </li>
+  <li :class="tieneNumero ? 'valido' : (password.length > 0 ? 'error' : 'pendiente')">
+    al menos un número
+  </li>
+</ul>
 
-            <!-- Al menos un número -->
-            <li :class="validacionClase(tieneNumero)">
-              <span>{{ validacionIcono(tieneNumero) }}</span>
-              al menos un número
-            </li>
-          </ul>
         </div>
 
         <!-- Checkbox de Términos -->
@@ -88,14 +83,21 @@ const password = ref('');
 const aceptaTerminos = ref(false);
 
 // Validaciones de la contraseña
-const tieneMayusMinus = computed(() =>
-  /[a-z]/.test(password.value) && /[A-Z]/.test(password.value)
-);
-const tieneNumero = computed(() => /\d/.test(password.value));
+const longitudCorrecta = computed(() => {
+  return password.value.length >= 8 && password.value.length <= 16;
+});
 
+const tieneMayusMinus = computed(() => {
+  return /[a-z]/.test(password.value) && /[A-Z]/.test(password.value);
+});
+
+const tieneNumero = computed(() => {
+  return /\d/.test(password.value);
+});
+
+// Validación del formulario
 const validarFormulario = computed(() =>
-  password.value.length >= 8 &&
-  password.value.length <= 16 &&
+  longitudCorrecta.value &&
   tieneMayusMinus.value &&
   tieneNumero.value &&
   aceptaTerminos.value
@@ -109,7 +111,6 @@ const validacionClase = (condicion) => {
 const validacionIcono = (condicion) => {
   return condicion ? '✔' : '!';
 };
-
 
 // Navegación
 const irADatosPersonales = () => {
@@ -126,6 +127,7 @@ const irARecuperarContrasena = () => {
   router.push('/recuperar-clave');
 };
 </script>
+
 
 <style scoped>
 /* ============================ */
@@ -392,6 +394,7 @@ const irARecuperarContrasena = () => {
 /* TEXTO "¿HAS OLVIDADO TU CONTRASEÑA?" */
 /* ============================ */
 .texto-olvido {
+  text-decoration: underline; ;
   margin-top: 20px;
   font-weight: bold;
   cursor: pointer;
