@@ -103,21 +103,23 @@
 
 <script setup>
 import { ref, computed } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 import PruebaInput from '@/components/PruebaInput.vue';
 import PrimaryButton from '@/components/PrimaryButton.vue';
-import { useRouter } from 'vue-router';
 
 const router = useRouter();
-const irAtras = () => router.go(-1);
+const route = useRoute(); // ✅ Capturar la información de la URL
 
+// ✅ Recibir el email desde LoginView2 (NO se muestra en la UI)
+const email = ref(route.query.email || '');
+
+// ✅ Función para ir a "Hemos Terminado", PASANDO EL EMAIL
 const irAHemosTerminado = () => {
-  // Validamos todos los campos antes de avanzar
   validarFormulario();
   if (formularioValido.value) {
-    router.push('/hemos-terminado');
+    router.push({ path: "/hemos-terminado", query: { email: email.value } });
   } else {
     console.log('❌ Hay errores en el formulario');
-    // Aquí podrías mostrar mensajes de error en la UI
   }
 };
 
@@ -131,7 +133,7 @@ const nombreConfianza = ref('');
 const telefonoConfianza = ref('');
 const codigoPaisConfianza = ref('+34');
 
-// 📌 Variables para el estado de error de cada campo
+// 📌 Validaciones
 const errorNombre = ref(false);
 const errorApellido1 = ref(false);
 const errorApellido2 = ref(false);
@@ -139,90 +141,40 @@ const errorTelefono = ref(false);
 const errorNombreConfianza = ref(false);
 const errorTelefonoConfianza = ref(false);
 
-// 📌 Función para validar nombres y apellidos (mínimo 2, máximo 30 caracteres)
 const validarTexto = (campo) => {
   const texto = campo.trim();
   return texto.length >= 2 && texto.length <= 30 && /^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$/.test(texto);
 };
 
-// 📌 Función para limitar en tiempo real el texto ingresado (nombres y apellidos)
 const limitarTexto = (campo) =>
   campo.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ ]/g, '').slice(0, 30);
 
-// 📌 Función para limpiar el teléfono
-// Se permiten dígitos y los siguientes caracteres especiales: +, -, (, ), espacio
-// Se limita la longitud total a 15 caracteres.
 const limpiarTelefono = (campo) =>
   campo.replace(/[^0-9+\-() ]/g, '').slice(0, 15);
 
-// 📌 Validación en tiempo real del teléfono personal
 const validarTelefono = () => {
   telefono.value = limpiarTelefono(telefono.value);
-  // Se cuentan solo los dígitos para validar la cantidad
   const digits = telefono.value.replace(/[^0-9]/g, '');
   errorTelefono.value = digits.length < 9 || digits.length > 15;
 };
 
-// 📌 Validación en tiempo real del teléfono de confianza (opcional)
-const validarTelefonoConfianza = () => {
-  telefonoConfianza.value = limpiarTelefono(telefonoConfianza.value);
-  const digits = telefonoConfianza.value.replace(/[^0-9]/g, '');
-  // Solo se valida si se ha ingresado algo
-  errorTelefonoConfianza.value =
-    telefonoConfianza.value.length > 0 && (digits.length < 9 || digits.length > 15);
-};
-
-// 📌 Validaciones individuales para los campos de texto
-const validarNombre = () => {
-  nombre.value = limitarTexto(nombre.value);
-  errorNombre.value = !validarTexto(nombre.value);
-};
-
-const validarApellido1 = () => {
-  apellido1.value = limitarTexto(apellido1.value);
-  errorApellido1.value = !validarTexto(apellido1.value);
-};
-
-const validarApellido2 = () => {
-  apellido2.value = limitarTexto(apellido2.value);
-  errorApellido2.value =
-    apellido2.value.length > 0 && !validarTexto(apellido2.value);
-};
-
-const validarNombreConfianza = () => {
-  nombreConfianza.value = limitarTexto(nombreConfianza.value);
-  errorNombreConfianza.value =
-    nombreConfianza.value.length > 0 && !validarTexto(nombreConfianza.value);
-};
-
-// 📌 Computado para determinar si el formulario es válido
-const formularioValido = computed(() => {
-  // Se obtienen solo los dígitos para la validación del teléfono
-  const digitsTelefono = telefono.value.replace(/[^0-9]/g, '');
-  const digitsTelefonoConfianza = telefonoConfianza.value.replace(/[^0-9]/g, '');
-  return (
-    !errorNombre.value &&
-    !errorApellido1.value &&
-    !errorApellido2.value &&
-    !errorTelefono.value &&
-    digitsTelefono.length >= 9 &&
-    digitsTelefono.length <= 15 &&
-    // Campos opcionales: si se ingresa algo, debe ser válido
-    (!nombreConfianza.value || !errorNombreConfianza.value) &&
-    (!telefonoConfianza.value || !errorTelefonoConfianza.value)
-  );
-});
-
-// 📌 Función para validar todos los campos del formulario
 const validarFormulario = () => {
-  validarNombre();
-  validarApellido1();
-  validarApellido2();
+  errorNombre.value = !validarTexto(nombre.value);
+  errorApellido1.value = !validarTexto(apellido1.value);
+  errorApellido2.value = apellido2.value.length > 0 && !validarTexto(apellido2.value);
   validarTelefono();
-  validarNombreConfianza();
-  validarTelefonoConfianza();
 };
+
+const formularioValido = computed(() =>
+  !errorNombre.value &&
+  !errorApellido1.value &&
+  !errorApellido2.value &&
+  !errorTelefono.value &&
+  telefono.value.replace(/[^0-9]/g, '').length >= 9 &&
+  telefono.value.replace(/[^0-9]/g, '').length <= 15
+);
 </script>
+
 
 
 
