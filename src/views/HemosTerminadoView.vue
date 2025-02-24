@@ -6,7 +6,7 @@
 
       <h2 class="subtitulo">¡Hemos terminado!</h2>
       <p class="descripcion">
-        Ya puedes entrar en Access Robots, aunque
+        Ya puedes entrar en AccessRobotss, aunque
         <strong>para reservar acompañamientos es necesario que verifiques tu cuenta.</strong>
       </p>
 

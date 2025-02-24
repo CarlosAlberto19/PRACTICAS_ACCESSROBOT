@@ -3,176 +3,233 @@
     <div class="caja-formulario">
       <!-- CABECERA -->
       <div class="cabecera">
-        <h1 class="titulo">Access Robot</h1>
+        <h1 class="titulo">Iniciar Sesión</h1>
         <img src="@/assets/images/ARturo.png" alt="Robot" class="imagen-robot" />
       </div>
 
-      <h2 class="subtitulo negrita">Crear nueva cuenta</h2>
+      <h2 class="subtitulo negrita">Introduce tus credenciales</h2>
 
       <!-- FORMULARIO -->
-      <form @submit.prevent="irAPantallaInterior">
-        <!-- Email -->
-        <div class="grupo-input">
-          <label for="email">Email</label>
+      <form @submit.prevent="validarLogin">
+        <!-- EMAIL -->
+        <div class="grupo-campo">
+          <!-- PruebaInput genera su propio label interno, 
+               así no duplicas contenedores -->
           <PruebaInput
-            id="email"
+            label_input="Email"
             placeholder="Introduce tu email"
-            type="email"
+            type="text"
             v-model="email"
+            @input="validarEmail"
+            class="input-estilizado"
+            :class="{
+              'error-borde': errorEmail !== '',
+              'borde-iluminado': emailFocus
+            }"
+            @focus="emailFocus = true"
+            @blur="emailFocus = false"
           />
+
+          <!-- Check verde (si email es válido) -->
+          <span v-if="emailValido" class="icono-check">✔</span>
+
+          <!-- Mensaje de error (si existe) -->
+          <p v-if="errorEmail" class="mensaje-error">❌ {{ errorEmail }}</p>
         </div>
 
-        <!-- Contraseña con validaciones -->
-        <div class="grupo-input">
-          <label for="password">Contraseña</label>
-          <div class="envoltorio-clave">
-            <input
-              id="password"
-              :type="mostrarClave ? 'text' : 'password'"
-              v-model="password"
-              placeholder="Crea una contraseña"
-            />
-            <!-- ICONO DINÁMICO (ojo o check) -->
-            <span class="icono material-icons" @click="togglePassword">
-              {{ iconPassword }}
-            </span>
-          </div>
-
-          <!-- Etiqueta "Tu contraseña debe contener..." -->
-          <p class="titulo-validaciones">Tu contraseña debe contener:</p>
-
-          <!-- Lista de validaciones -->
-          <ul class="validaciones">
-            <!-- 8 a 16 caracteres -->
-            <li :class="{
-              valido: password.length >= 8 && password.length <= 16,
-              error: password.length > 0 && (password.length < 8 || password.length > 16)
-            }">
-              <span v-if="password.length >= 8 && password.length <= 16">✅</span>
-              <span v-else-if="password.length > 0">❌</span>
-              <span v-else>⚪</span>
-              entre 8 y 16 caracteres
-            </li>
-            
-            <!-- mayúsculas y minúsculas -->
-            <li :class="{
-              valido: tieneMayusMinus,
-              error: password.length > 0 && !tieneMayusMinus
-            }">
-              <span v-if="tieneMayusMinus">✅</span>
-              <span v-else-if="password.length > 0">❌</span>
-              <span v-else>⚪</span>
-              mayúsculas y minúsculas
-            </li>
-
-            <!-- al menos un número -->
-            <li :class="{
-              valido: tieneNumero,
-              error: password.length > 0 && !tieneNumero
-            }">
-              <span v-if="tieneNumero">✅</span>
-              <span v-else-if="password.length > 0">❌</span>
-              <span v-else>⚪</span>
-              al menos un número
-            </li>
-          </ul>
-        </div>
-
-        <!-- Checkbox de Términos -->
-        <div class="checkbox-container">
-          <Checkbox
-            v-model="aceptaTerminos"
-            label="Acepto los Términos y condiciones de uso"
+        <!-- CONTRASEÑA -->
+        <div class="grupo-campo">
+          <PruebaInput
+            label_input="Contraseña"
+            placeholder="Introduce tu contraseña"
+            type="password"
+            v-model="password"
+            @input="validarPassword"
+            class="input-estilizado"
+            :class="{
+              'error-borde': errorPassword !== '',
+              'borde-iluminado': passwordFocus
+            }"
+            @focus="passwordFocus = true"
+            @blur="passwordFocus = false"
           />
+
+          <!-- Check verde (si password es válida) -->
+          <span v-if="passwordValida" class="icono-check">✔</span>
+
+          <!-- Mensaje de error -->
+          <p v-if="errorPassword" class="mensaje-error">❌ {{ errorPassword }}</p>
         </div>
 
-        <!-- Botón Siguiente -->
+        <!-- Botón Entrar -->
         <PrimaryButton
-          class="boton-siguiente"
-          label="Siguiente"
+          class="boton-enviar"
+          label="Entrar"
           type="submit"
-          :disabled="!validarFormulario"
+          :disabled="botonDeshabilitado"
+        />
+
+        <!-- "¿Has olvidado tu contraseña?" -->
+        <p class="texto-olvido" @click="irARecuperarContrasena">
+          <strong>¿Has olvidado tu contraseña?</strong>
+        </p>
+
+        <hr class="linea-separadora" />
+
+        <p class="texto-centrado">¿No tienes cuenta?</p>
+        <SecondaryButton
+          label="Ir a Crear nueva cuenta"
+          type="button"
+          @click="irACrearCuenta"
         />
       </form>
-
-      <!-- Línea separadora -->
-      <hr class="linea-separadora" />
-
-      <!-- Texto: ¿Ya tienes cuenta? + botón "Ir a iniciar sesión" -->
-      <p class="texto-centrado">¿Ya tienes cuenta?</p>
-      <SecondaryButton
-        label="Ir a iniciar sesión"
-        type="button"
-        @click="irALogin"
-      />
-
-      <!-- Texto "¿Has olvidado tu contraseña?" en negrita y clicable -->
-      <p class="texto-olvido" @click="irARecuperarContrasena">
-        <strong>¿Has olvidado tu contraseña?</strong>
-      </p>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, computed } from "vue";
+import { useRouter } from "vue-router";
 
-import PrimaryButton from '@/components/PrimaryButton.vue'
-import SecondaryButton from '@/components/SecondaryButton.vue'
-import PruebaInput from '@/components/PruebaInput.vue'
-import Checkbox from '@/components/Checkbox.vue'
+import PrimaryButton from "@/components/PrimaryButton.vue";
+import SecondaryButton from "@/components/SecondaryButton.vue";
+import PruebaInput from "@/components/PruebaInput.vue";
 
-const router = useRouter()
+const router = useRouter();
 
-// Campos
-const email = ref('')
-const password = ref('')
-const aceptaTerminos = ref(false)
+// =============================
+// Variables reactivas
+// =============================
+const email = ref("");
+const password = ref("");
+const emailFocus = ref(false);
+const passwordFocus = ref(false);
 
-// Mostrar / ocultar contraseña
-const mostrarClave = ref(false)
-const togglePassword = () => {
-  mostrarClave.value = !mostrarClave.value
-}
+// Errores como strings (cadena vacía => sin error)
+const errorEmail = ref("");
+const errorPassword = ref("");
 
-// Validaciones
-const tieneMayusMinus = computed(() =>
-  /[a-z]/.test(password.value) && /[A-Z]/.test(password.value)
-)
-const tieneNumero = computed(() => /\d/.test(password.value))
+// =============================
+// Validar Email (similar a "recuperarclave")
+// =============================
+function validarEmail() {
+  // Elimina espacios
+  email.value = email.value.replace(/\s+/g, "");
 
-// Habilitar Botón “Siguiente” solo si todas las validaciones se cumplen
-const validarFormulario = computed(() =>
-  password.value.length >= 8 &&
-  password.value.length <= 16 &&
-  tieneMayusMinus.value &&
-  tieneNumero.value &&
-  aceptaTerminos.value
-)
-
-// Icono para el ojo (o check) de Material Icons
-const iconPassword = computed(() => {
-  if (validarFormulario.value) {
-    return 'done' // check
-  } else {
-    return mostrarClave.value ? 'visibility_off' : 'visibility'
+  // 1) Vacío
+  if (!email.value) {
+    errorEmail.value = "El email no puede estar vacío.";
+    return;
   }
-})
-
-// Navegaciones
-const irAPantallaInterior = () => {
-  if (validarFormulario.value) {
-    router.push('/datos-interiores')
+  // 2) Verifica un solo '@'
+  if ((email.value.match(/@/g) || []).length > 1) {
+    errorEmail.value = 'El email solo puede contener un "@"';
+    return;
   }
+  // 3) Debe tener '@'
+  if (!email.value.includes("@")) {
+    errorEmail.value = 'El email debe contener "@"';
+    return;
+  }
+  // 4) Debe tener '.'
+  if (!email.value.includes(".")) {
+    errorEmail.value = 'El email debe contener "." después de "@"';
+    return;
+  }
+  // 5) Máximo 50 caracteres
+  if (email.value.length > 50) {
+    errorEmail.value = "El email no puede superar los 50 caracteres.";
+    return;
+  }
+
+  // 6) Regex general
+  const reEmail = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
+  if (!reEmail.test(email.value)) {
+    errorEmail.value = "Introduce un email válido (ejemplo: usuario@gmail.com)";
+    return;
+  }
+
+  // Sin error
+  errorEmail.value = "";
 }
 
-const irALogin = () => {
-  router.push('/login')
+// Computed: emailValido => TRUE si no hay error y no está vacío
+const emailValido = computed(() => errorEmail.value === "" && email.value !== "");
+
+// =============================
+// Validar Password
+// =============================
+function validarPassword() {
+  // 1) Vacía
+  if (!password.value) {
+    errorPassword.value = "La contraseña no puede estar vacía.";
+    return;
+  }
+  // 2) 8-16 chars
+  if (password.value.length < 8 || password.value.length > 16) {
+    errorPassword.value = "Debe tener entre 8 y 16 caracteres.";
+    return;
+  }
+  // 3) Mayus y minus
+  if (!/[a-z]/.test(password.value) || !/[A-Z]/.test(password.value)) {
+    errorPassword.value = "Debe incluir mayúsculas y minúsculas.";
+    return;
+  }
+  // 4) Debe tener un número
+  if (!/\d/.test(password.value)) {
+    errorPassword.value = "Debe contener al menos un número.";
+    return;
+  }
+  // 5) Sin espacios
+  if (/\s/.test(password.value)) {
+    errorPassword.value = "No se permiten espacios en la contraseña.";
+    return;
+  }
+  // 6) Solo [a-zA-Z0-9!@#$%^&*]
+  if (/[^a-zA-Z0-9!@#$%^&*]/.test(password.value)) {
+    errorPassword.value = "No se permiten caracteres especiales extraños.";
+    return;
+  }
+
+  // Sin error
+  errorPassword.value = "";
 }
 
-const irARecuperarContrasena = () => {
-  router.push('/recuperar-clave')
+// Computed: passwordValida => TRUE si no hay error
+const passwordValida = computed(() => errorPassword.value === "" && password.value !== "");
+
+// =============================
+// Botón Deshabilitado
+// =============================
+const botonDeshabilitado = computed(() => {
+  return errorEmail.value !== "" || errorPassword.value !== "";
+});
+
+// =============================
+// Función para login
+// =============================
+function validarLogin() {
+  // Dispara validaciones
+  validarEmail();
+  validarPassword();
+
+  // Si hay errores => no pasar
+  if (errorEmail.value || errorPassword.value) {
+    return;
+  }
+
+  // Si OK, redirige (ejemplo) al home
+  router.push("/");
+}
+
+// =============================
+// Navegación
+// =============================
+function irACrearCuenta() {
+  router.push("/crear-cuenta");
+}
+function irARecuperarContrasena() {
+  router.push("/recuperar-clave");
 }
 </script>
 
@@ -181,7 +238,7 @@ const irARecuperarContrasena = () => {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 95vh;
   width: 100%;
   background-color: #f8f9fa;
 }
@@ -190,125 +247,77 @@ const irARecuperarContrasena = () => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 750px;
+  width: 95%;
+  max-width: 500px;
   background: white;
-  padding: 50px;
+  padding: 40px;
   border-radius: 12px;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* CABECERA */
-.cabecera {
-  text-align: center;
-  margin-bottom: 20px;
-}
-.titulo {
-  font-size: 36px;
-  font-weight: bold;
-}
-.imagen-robot {
-  width: 180px;
-  height: auto;
-  margin-top: 10px;
-}
-
-/* SUBTITULO */
 .subtitulo {
-  font-size: 20px;
+  font-size: 16px;
   font-weight: bold;
-  margin: 20px 0;
-}
-
-/* FORMULARIO */
-.grupo-input {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  width: 100%;
+  text-align: center;
   margin-bottom: 25px;
 }
-.grupo-input label {
-  font-size: 22px;
-  font-weight: bold;
+
+.imagen-robot {
+  width: 120px;
+  height: auto;
+  margin: 15px auto;
+  display: block;
 }
 
-/* Contraseña: mostrar/ocultar */
-.envoltorio-clave {
+/* Contenedor de cada campo (para posicionar el check, etc.) */
+.grupo-campo {
+  margin-bottom: 20px;
   position: relative;
-  display: flex;
-  align-items: center;
-}
-.envoltorio-clave input {
-  width: 100%;
-  padding: 16px;
-  font-size: 18px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
 }
 
-/* Icono (ojo o check) */
-.icono {
+/* Check verde (posicionado en la esquina derecha del input) */
+.icono-check {
   position: absolute;
-  right: 12px;
-  cursor: pointer;
-  font-size: 24px;
-}
-
-/* Texto “Tu contraseña debe contener:” */
-.titulo-validaciones {
-  font-weight: bold;
-  margin: 10px 0 5px 0;
-}
-
-/* Validaciones de contraseña */
-.validaciones {
+  right: 5px;
+  top: 48px; /* Ajusta según tu input */
   font-size: 16px;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-/* Distinguimos clases .valido y .error para colorear: */
-.validaciones li {
-  margin-bottom: 5px;
-  display: flex;
-  align-items: center;
-  gap: 6px; /* Espacio entre icono y texto */
-}
-.validaciones li.valido {
   color: green;
 }
-.validaciones li.error {
+
+/* Borde rojo para error */
+.error-borde {
+  border-color: red !important;
+  box-shadow: 0 0 8px rgba(255, 0, 0, 0.6);
+}
+
+/* Borde focus color morado */
+.borde-iluminado {
+  border-color: #7A40E0 !important;
+  box-shadow: 0 0 8px rgba(122, 64, 224, 0.6);
+}
+
+/* Mensaje de error */
+.mensaje-error {
   color: red;
+  font-size: 14px;
+  margin-top: 4px;
 }
 
-/* Checkbox */
-.checkbox-container {
-  margin-bottom: 5px;
-}
-
-/* Botón Siguiente */
-.boton-siguiente {
-  margin-top: 25px;
-  margin-bottom: 15px;
-}
-
-/* Línea separadora */
+/* Barra separadora */
 .linea-separadora {
-  width: 100%;
-  border: none;
-  border-top: 1px solid #ccc;
-  margin: 20px 0;
+  margin: 20px auto;
+  width: 80%;
+  border: 0;
+  border-top: 3px solid #ccc;
 }
 
-/* Texto “¿Ya tienes cuenta?” */
+/* Texto centrado */
 .texto-centrado {
   text-align: center;
-  margin: 0 0 15px;
 }
 
-/* Texto “¿Has olvidado tu contraseña?” en negrita, clicable */
 .texto-olvido {
+  text-decoration: underline;
   margin-top: 10px;
   cursor: pointer;
   text-align: center;

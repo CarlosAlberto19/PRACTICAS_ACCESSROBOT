@@ -3,7 +3,7 @@
     <div class="caja-formulario">
       <!-- CABECERA -->
       <div class="cabecera">
-        <h1 class="titulo">Access Robot</h1>
+        <h1 class="titulo">AccessRobots</h1>
         <img src="@/assets/images/ARturo.png" alt="Robot" class="imagen-robot" />
       </div>
 
@@ -82,12 +82,20 @@ const email = ref('');
 const password = ref('');
 const aceptaTerminos = ref(false);
 
-// ✅ Validaciones de la contraseña
-const longitudCorrecta = computed(() => password.value.length >= 8 && password.value.length <= 16);
-const tieneMayusMinus = computed(() => /[a-z]/.test(password.value) && /[A-Z]/.test(password.value));
-const tieneNumero = computed(() => /\d/.test(password.value));
+// Validaciones de la contraseña
+const longitudCorrecta = computed(() => {
+  return password.value.length >= 8 && password.value.length <= 16;
+});
 
-// ✅ Validación del formulario
+const tieneMayusMinus = computed(() => {
+  return /[a-z]/.test(password.value) && /[A-Z]/.test(password.value);
+});
+
+const tieneNumero = computed(() => {
+  return /\d/.test(password.value);
+});
+
+// Validación del formulario
 const validarFormulario = computed(() =>
   longitudCorrecta.value &&
   tieneMayusMinus.value &&
@@ -95,16 +103,29 @@ const validarFormulario = computed(() =>
   aceptaTerminos.value
 );
 
-// ✅ Función para ir a DatosPersonalesView (NO pasa el email aquí)
+// Funciones para cambiar estilos de validación dinámicamente
+const validacionClase = (condicion) => {
+  return condicion ? 'valido' : 'error';
+};
+
+const validacionIcono = (condicion) => {
+  return condicion ? '✔' : '!';
+};
+
+// Navegación
 const irADatosPersonales = () => {
   if (validarFormulario.value) {
     router.push('/datos-personales');
   }
 };
 
-// ✅ Otras funciones de navegación
-const irALogin = () => router.push('/login');
-const irARecuperarContrasena = () => router.push('/recuperar-clave');
+const irALogin = () => {
+  router.push('/login');
+};
+
+const irARecuperarContrasena = () => {
+  router.push('/recuperar-clave');
+};
 </script>
 
 

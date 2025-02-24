@@ -2,7 +2,7 @@
   <div class="contenedor-pagina">
     <!-- CABECERA: Título + Imagen, centrados arriba -->
     <div class="cabecera">
-      <h1 class="titulo">Access Robot</h1>
+      <h1 class="titulo">AccessRobots</h1>
       <img src="@/assets/images/ARturo.png" alt="Robot" class="imagen-robot" />
     </div>
 
