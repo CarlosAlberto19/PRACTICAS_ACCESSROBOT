@@ -1,10 +1,15 @@
+<!-- filepath: /c:/Users/carlo/Desktop/Xtd Talento Digital Once/PRACTICAS_ACCESSROBOT-master/src/views/LoginViewCrearNuevaCuenta.vue -->
 <template>
   <div class="contenedor-pagina">
     <div class="caja-formulario">
       <!-- CABECERA -->
       <div class="cabecera">
         <h1 class="titulo">Iniciar Sesión</h1>
-        <img src="@/assets/images/ARturo.png" alt="Robot" class="imagen-robot" />
+        <img
+          src="@/assets/images/ARturo.png"
+          alt="Robot"
+          class="imagen-robot"
+        />
       </div>
 
       <h2 class="subtitulo negrita">Introduce tus credenciales</h2>
@@ -12,61 +17,60 @@
       <!-- FORMULARIO -->
       <form @submit.prevent="validarLogin">
         <!-- EMAIL -->
-        <div class="grupo-campo">
-          <!-- PruebaInput genera su propio label interno, 
-               así no duplicas contenedores -->
-          <PruebaInput
-            label_input="Email"
-            placeholder="Introduce tu email"
-            type="text"
-            v-model="email"
-            @input="validarEmail"
-            class="input-estilizado"
-            :class="{
-              'error-borde': errorEmail !== '',
-              'borde-iluminado': emailFocus
-            }"
-            @focus="emailFocus = true"
-            @blur="emailFocus = false"
-          />
-
-          <!-- Check verde (si email es válido) -->
-          <span v-if="emailValido" class="icono-check">✔</span>
-
-          <!-- Mensaje de error (si existe) -->
+        <div class="campo">
+          <label for="email">Email</label>
+          <div class="input-container">
+            <PruebaInput
+              id="email"
+              placeholder="Introduce tu email"
+              type="text"
+              v-model="email"
+              @input="validarEmail"
+              class="input-estilizado"
+              :class="{
+                'error-borde': errorEmail !== '',
+                'borde-iluminado': emailFocus
+              }"
+              @focus="emailFocus = true"
+              @blur="emailFocus = false"
+            />
+            <!-- Check verde si emailValido -->
+            <span v-if="emailValido" class="icono-check">✔</span>
+          </div>
           <p v-if="errorEmail" class="mensaje-error">❌ {{ errorEmail }}</p>
         </div>
 
         <!-- CONTRASEÑA -->
-        <div class="grupo-campo">
-          <PruebaInput
-            label_input="Contraseña"
-            placeholder="Introduce tu contraseña"
-            type="password"
-            v-model="password"
-            @input="validarPassword"
-            class="input-estilizado"
-            :class="{
-              'error-borde': errorPassword !== '',
-              'borde-iluminado': passwordFocus
-            }"
-            @focus="passwordFocus = true"
-            @blur="passwordFocus = false"
-          />
-
-          <!-- Check verde (si password es válida) -->
-          <span v-if="passwordValida" class="icono-check">✔</span>
-
-          <!-- Mensaje de error -->
+        <div class="campo">
+          <label for="password">Contraseña</label>
+          <div class="input-container">
+            <PruebaInput
+              id="password"
+              placeholder="Introduce tu contraseña"
+              type="password"
+              v-model="password"
+              @input="validarPassword"
+              :isValid="passwordValida"
+              class="input-estilizado"
+              :class="{
+                'error-borde': errorPassword !== '',
+                'borde-iluminado': passwordFocus
+              }"
+              @focus="passwordFocus = true"
+              @blur="passwordFocus = false"
+            />
+            <!-- Check verde si passwordValida -->
+            <span v-if="passwordValida" class="icono-check">✔</span>
+          </div>
           <p v-if="errorPassword" class="mensaje-error">❌ {{ errorPassword }}</p>
         </div>
 
-        <!-- Botón Entrar -->
+        <!-- Botón Entrar (deshabilitado si hay error) -->
         <PrimaryButton
           class="boton-enviar"
           label="Entrar"
           type="submit"
-          :disabled="botonDeshabilitado"
+          :disabled="botonDeshabilitado || enviando"
         />
 
         <!-- "¿Has olvidado tu contraseña?" -->
@@ -91,9 +95,9 @@
 import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
 
+import PruebaInput from "@/components/PruebaInput.vue";
 import PrimaryButton from "@/components/PrimaryButton.vue";
 import SecondaryButton from "@/components/SecondaryButton.vue";
-import PruebaInput from "@/components/PruebaInput.vue";
 
 const router = useRouter();
 
@@ -104,99 +108,82 @@ const email = ref("");
 const password = ref("");
 const emailFocus = ref(false);
 const passwordFocus = ref(false);
+const enviando = ref(false);
 
-// Errores como strings (cadena vacía => sin error)
+// Errores (si están vacíos => no hay error)
 const errorEmail = ref("");
 const errorPassword = ref("");
 
 // =============================
-// Validar Email (similar a "recuperarclave")
+// Validar Email
 // =============================
 function validarEmail() {
-  // Elimina espacios
   email.value = email.value.replace(/\s+/g, "");
 
-  // 1) Vacío
   if (!email.value) {
     errorEmail.value = "El email no puede estar vacío.";
     return;
   }
-  // 2) Verifica un solo '@'
   if ((email.value.match(/@/g) || []).length > 1) {
     errorEmail.value = 'El email solo puede contener un "@"';
     return;
   }
-  // 3) Debe tener '@'
   if (!email.value.includes("@")) {
     errorEmail.value = 'El email debe contener "@"';
     return;
   }
-  // 4) Debe tener '.'
   if (!email.value.includes(".")) {
     errorEmail.value = 'El email debe contener "." después de "@"';
     return;
   }
-  // 5) Máximo 50 caracteres
   if (email.value.length > 50) {
     errorEmail.value = "El email no puede superar los 50 caracteres.";
     return;
   }
-
-  // 6) Regex general
   const reEmail = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
   if (!reEmail.test(email.value)) {
-    errorEmail.value = "Introduce un email válido (ejemplo: usuario@gmail.com)";
+    errorEmail.value = "Introduce un email válido (ej: usuario@gmail.com)";
     return;
   }
-
-  // Sin error
   errorEmail.value = "";
 }
-
-// Computed: emailValido => TRUE si no hay error y no está vacío
-const emailValido = computed(() => errorEmail.value === "" && email.value !== "");
+const emailValido = computed(() => {
+  return errorEmail.value === "" && email.value !== "";
+});
 
 // =============================
 // Validar Password
 // =============================
 function validarPassword() {
-  // 1) Vacía
   if (!password.value) {
     errorPassword.value = "La contraseña no puede estar vacía.";
     return;
   }
-  // 2) 8-16 chars
   if (password.value.length < 8 || password.value.length > 16) {
     errorPassword.value = "Debe tener entre 8 y 16 caracteres.";
     return;
   }
-  // 3) Mayus y minus
   if (!/[a-z]/.test(password.value) || !/[A-Z]/.test(password.value)) {
     errorPassword.value = "Debe incluir mayúsculas y minúsculas.";
     return;
   }
-  // 4) Debe tener un número
   if (!/\d/.test(password.value)) {
     errorPassword.value = "Debe contener al menos un número.";
     return;
   }
-  // 5) Sin espacios
   if (/\s/.test(password.value)) {
     errorPassword.value = "No se permiten espacios en la contraseña.";
     return;
   }
-  // 6) Solo [a-zA-Z0-9!@#$%^&*]
   if (/[^a-zA-Z0-9!@#$%^&*]/.test(password.value)) {
     errorPassword.value = "No se permiten caracteres especiales extraños.";
     return;
   }
-
-  // Sin error
   errorPassword.value = "";
 }
-
-// Computed: passwordValida => TRUE si no hay error
-const passwordValida = computed(() => errorPassword.value === "" && password.value !== "");
+const passwordValida = computed(() => {
+  return errorPassword.value === "" && password.value !== "";
+});
 
 // =============================
 // Botón Deshabilitado
@@ -208,18 +195,25 @@ const botonDeshabilitado = computed(() => {
 // =============================
 // Función para login
 // =============================
-function validarLogin() {
-  // Dispara validaciones
+async function validarLogin() {
+  // Forzamos validaciones
   validarEmail();
   validarPassword();
 
-  // Si hay errores => no pasar
   if (errorEmail.value || errorPassword.value) {
     return;
   }
 
-  // Si OK, redirige (ejemplo) al home
-  router.push("/");
+  // Evitar envíos múltiples
+  if (enviando.value) return;
+  enviando.value = true;
+
+  // Simulación de envío
+  setTimeout(() => {
+    // Ir al home (ejemplo)
+    router.push("/");
+    enviando.value = false;
+  }, 1000);
 }
 
 // =============================
@@ -242,7 +236,6 @@ function irARecuperarContrasena() {
   width: 100%;
   background-color: #f8f9fa;
 }
-
 .caja-formulario {
   display: flex;
   flex-direction: column;
@@ -254,46 +247,52 @@ function irARecuperarContrasena() {
   border-radius: 12px;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
-
 .subtitulo {
   font-size: 16px;
   font-weight: bold;
   text-align: center;
   margin-bottom: 25px;
 }
-
 .imagen-robot {
   width: 120px;
-  height: auto;
   margin: 15px auto;
   display: block;
 }
 
-/* Contenedor de cada campo (para posicionar el check, etc.) */
-.grupo-campo {
-  margin-bottom: 20px;
+/* 
+  Agrupa label + <PruebaInput> + (check solo en email)
+*/
+.campo {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+  position: relative;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.input-container {
   position: relative;
 }
 
-/* Check verde (posicionado en la esquina derecha del input) */
+/* Check verde => Email y Password si son válidos */
 .icono-check {
   position: absolute;
-  right: 5px;
-  top: 48px; /* Ajusta según tu input */
-  font-size: 16px;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
   color: green;
 }
 
-/* Borde rojo para error */
+/* Borde error + focus */
 .error-borde {
-  border-color: red !important;
-  box-shadow: 0 0 8px rgba(255, 0, 0, 0.6);
+  border: 2px solid red !important;
+  box-shadow: 0 0 8px rgba(255,0,0,0.9) !important;
 }
-
-/* Borde focus color morado */
 .borde-iluminado {
-  border-color: #7A40E0 !important;
-  box-shadow: 0 0 8px rgba(122, 64, 224, 0.6);
+  border: 2px solid #7A40E0 !important;
+  box-shadow: 0 0 8px rgba(122,64,224,0.9) !important;
 }
 
 /* Mensaje de error */
@@ -310,12 +309,9 @@ function irARecuperarContrasena() {
   border: 0;
   border-top: 3px solid #ccc;
 }
-
-/* Texto centrado */
 .texto-centrado {
   text-align: center;
 }
-
 .texto-olvido {
   text-decoration: underline;
   margin-top: 10px;
