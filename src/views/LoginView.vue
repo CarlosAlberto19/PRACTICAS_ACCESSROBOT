@@ -1,246 +1,360 @@
+<!-- filepath: /c:/Users/carlo/Desktop/Xtd Talento Digital Once/PRACTICAS_ACCESSROBOT-master/src/views/LoginViewCrearNuevaCuenta.vue -->
 <template>
   <div class="contenedor-pagina">
-    <!-- CABECERA: Título + Imagen, centrados arriba -->
-    <div class="cabecera">
-      <h1 class="titulo">AccessRobots</h1>
-      <img src="@/assets/images/ARturo.png" alt="Robot" class="imagen-robot" />
-    </div>
-
-    <!-- CONTENEDOR PRINCIPAL EN HORIZONTAL -->
-    <div class="contenedor-horizontal">
-      <!-- FORMULARIO -->
-      <div class="caja-formulario">
-        <h2 class="subtitulo">Crear nueva cuenta</h2>
-        
-        <div class="grupo-inputs">
-          <div class="campo">
-            <label for="correo">Email</label>
-            <input id="correo" type="email" placeholder="Introduce tu email" />
-          </div>
-
-          <div class="campo">
-            <label for="clave">Contraseña</label>
-            <div class="envoltorio-clave">
-              <input id="clave" type="password" placeholder="Crea una contraseña" />
-              <span class="icono material-icons">visibility</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Checkbox de Términos -->
-        <div class="contenedor-checkbox">
-          <label class="checkbox-personalizado">
-            <input type="checkbox" v-model="aceptaTerminos" />
-            <span class="marca"></span>
-          </label>
-          <span class="texto-checkbox">Acepto los Términos y condiciones de uso</span>
-        </div>
-
-        <!-- Botón Siguiente -->
-        <PrimaryButton label="Siguiente" type="button" :disabled="!aceptaTerminos" @click="handleNext" />
-
-        <!-- Nueva separación para "¿Ya tienes cuenta?" -->
-        <div class="separador-inferior"></div>
-
-        <p class="texto-centrado">¿Ya tienes cuenta?</p>
-
-        <!-- Botón Iniciar Sesión -->
-        <SecondaryButton label="Ir a iniciar sesión" type="button" @click="goToLogin" />
-
-        <!-- Texto de "¿Has olvidado tu contraseña?" -->
-        <p class="texto-olvido"><strong>¿Has olvidado tu contraseña?</strong></p>
-
-        <!-- Línea negra mejorada -->
-        <hr class="linea-separadora" />
+    <div class="caja-formulario">
+      <!-- CABECERA -->
+      <div class="cabecera">
+        <h1 class="titulo">Iniciar Sesión</h1>
+        <img
+          src="@/assets/images/ARturo.png"
+          alt="Robot"
+          class="imagen-robot"
+        />
       </div>
+
+      <h2 class="subtitulo negrita">Iniciar sesión</h2>
+
+      <!-- FORMULARIO -->
+      <form @submit.prevent="validarLogin">
+        <!-- EMAIL -->
+        <div class="campo">
+          <label for="email">Email</label>
+          <div class="input-container">
+            <PruebaInput
+              id="email"
+              placeholder="Introduce tu email"
+              type="text"
+              v-model="email"
+              @input="validarEmail"
+              class="input-estilizado"
+              :class="{
+                'error-borde': errorEmail !== '',
+                'borde-iluminado': emailFocus
+              }"
+              @focus="emailFocus = true"
+              @blur="emailFocus = false"
+            />
+            <!-- Check verde si emailValido -->
+            <span v-if="emailValido" class="icono-check">✔</span>
+          </div>
+          <p v-if="errorEmail" class="mensaje-error">❌ {{ errorEmail }}</p>
+        </div>
+
+        <!-- CONTRASEÑA -->
+        <div class="campo">
+          <label for="password">Contraseña</label>
+          <div class="input-container">
+            <PruebaInput
+              id="password"
+              placeholder="Introduce tu contraseña"
+              type="password"
+              v-model="password"
+              @input="validarPassword"
+              :isValid="passwordValida"
+              class="input-estilizado"
+              :class="{
+                'error-borde': errorPassword !== '',
+                'borde-iluminado': passwordFocus
+              }"
+              @focus="passwordFocus = true"
+              @blur="passwordFocus = false"
+            />
+            <!-- 🔴 Se ha eliminado el check de la contraseña aquí -->
+            <!-- <span v-if="passwordValida" class="icono-check">✔</span> -->
+          </div>
+          <p v-if="errorPassword" class="mensaje-error">❌ {{ errorPassword }}</p>
+        </div>
+
+        <!-- Botón Entrar (deshabilitado si hay error) -->
+        <PrimaryButton
+          class="boton-enviar"
+          label="Entrar"
+          type="submit"
+          :disabled="botonDeshabilitado || enviando"
+        />
+
+        <!-- "¿Has olvidado tu contraseña?" -->
+        <p class="texto-olvido" @click="irARecuperarContrasena">
+          <strong>¿Has olvidado tu contraseña?</strong>
+        </p>
+
+        <hr class="linea-separadora" />
+
+        <p class="texto-centrado">¿No tienes cuenta?</p>
+        <SecondaryButton
+          label="Ir a Crear nueva cuenta"
+          type="button"
+          @click="irACrearCuenta"
+        />
+      </form>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-import PrimaryButton from '@/components/PrimaryButton.vue';
-import SecondaryButton from '@/components/SecondaryButton.vue';
+import { ref, computed } from "vue";
+import { useRouter } from "vue-router";
+
+import PruebaInput from "@/components/PruebaInput.vue";
+import PrimaryButton from "@/components/PrimaryButton.vue";
+import SecondaryButton from "@/components/SecondaryButton.vue";
 
 const router = useRouter();
-const aceptaTerminos = ref(false);
 
-const handleNext = () => {
-  if (aceptaTerminos.value) {
-    router.push('/auth');
+// =============================
+// Variables reactivas
+// =============================
+const email = ref("");
+const password = ref("");
+const mostrarPassword = ref(false); // 👁 Controla si la contraseña es visible
+const emailFocus = ref(false);
+const passwordFocus = ref(false);
+const enviando = ref(false);
+
+// Errores (si están vacíos => no hay error)
+const errorEmail = ref("");
+const errorPassword = ref("");
+
+// =============================
+// Validar Email
+// =============================
+function validarEmail() {
+  email.value = email.value.replace(/\s+/g, ""); // 🔹 Elimina espacios
+
+  if (!email.value) {
+    errorEmail.value = "El email no puede estar vacío.";
+    return;
   }
-};
+  if ((email.value.match(/@/g) || []).length > 1) {
+    errorEmail.value = 'El email solo puede contener un "@"';
+    return;
+  }
+  if (!email.value.includes("@")) {
+    errorEmail.value = 'El email debe contener "@"';
+    return;
+  }
+  if (!email.value.includes(".")) {
+    errorEmail.value = 'El email debe contener "." después de "@"';
+    return;
+  }
+  if (email.value.length > 50) {
+    errorEmail.value = "El email no puede superar los 50 caracteres.";
+    return;
+  }
+  const reEmail = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
+  if (!reEmail.test(email.value)) {
+    errorEmail.value = "Introduce un email válido (ej: usuario@gmail.com)";
+    return;
+  }
+  errorEmail.value = "";
+}
+const emailValido = computed(() => errorEmail.value === "" && email.value !== "");
 
-const goToLogin = () => {
-  router.push('/login');
-};
+// =============================
+// Validar Password
+// =============================
+function validarPassword() {
+  if (!password.value) {
+    errorPassword.value = "La contraseña no puede estar vacía.";
+    return;
+  }
+  if (password.value.length < 8 || password.value.length > 16) {
+    errorPassword.value = "Debe tener entre 8 y 16 caracteres.";
+    return;
+  }
+  if (!/[a-z]/.test(password.value) || !/[A-Z]/.test(password.value)) {
+    errorPassword.value = "Debe incluir mayúsculas y minúsculas.";
+    return;
+  }
+  if (!/\d/.test(password.value)) {
+    errorPassword.value = "Debe contener al menos un número.";
+    return;
+  }
+  if (/\s/.test(password.value)) {
+    errorPassword.value = "No se permiten espacios en la contraseña.";
+    return;
+  }
+  if (/[^a-zA-Z0-9!@#$%^&*]/.test(password.value)) {
+    errorPassword.value = "No se permiten caracteres especiales extraños.";
+    return;
+  }
+  errorPassword.value = "";
+}
+const passwordValida = computed(() => errorPassword.value === "" && password.value !== "");
+
+// =============================
+// Botón Deshabilitado
+// =============================
+const botonDeshabilitado = computed(() => {
+  return !emailValido.value || !passwordValida.value;
+});
+
+// =============================
+// Función para login
+// =============================
+async function validarLogin() {
+  // Forzamos validaciones
+  validarEmail();
+  validarPassword();
+
+  if (errorEmail.value || errorPassword.value) {
+    return;
+  }
+
+  // Evitar envíos múltiples
+  if (enviando.value) return;
+  enviando.value = true;
+
+  // Simulación de envío
+  setTimeout(() => {
+    router.push("/");
+    enviando.value = false;
+  }, 1000);
+}
+
+// =============================
+// Navegación
+// =============================
+function irACrearCuenta() {
+  router.push("/crear-cuenta");
+}
+function irARecuperarContrasena() {
+  router.push("/recuperar-clave");
+}
+
+import { onMounted } from "vue";
+
+onMounted(() => {
+  const header = document.querySelector("header");
+  if (header) {
+    header.style.display = "none";
+  }
+});
+
+
 </script>
 
+
 <style scoped>
-/* CONTENEDOR PRINCIPAL */
+/* ✅ Se elimina font-weight aquí porque no afecta a los labels */
 .contenedor-pagina {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  background-color: #f8f9fa;
-  padding: 20px;
-}
-
-/* CABECERA */
-.cabecera {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 30px;
-}
-
-.titulo {
-  font-size: 30px;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.imagen-robot {
-  width: 140px;
-  height: auto;
-  object-fit: contain;
-}
-
-/* CONTENEDOR HORIZONTAL */
-.contenedor-horizontal {
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  gap: 50px;
-  width: 100%;
+  align-items: center;
+  height: 100vh;  /* 🔹 Lo hacemos más alto */
+  width: 150%;
+  background-color: #f8f9fa;
+  padding: 40px 20px; /* 🔹 Agregamos padding para evitar que quede pegado a los bordes */
 }
 
-/* CAJA DEL FORMULARIO */
 .caja-formulario {
-  width: 100%;
-  max-width: 400px;
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  text-align: center;
-}
-
-/* INPUTS */
-.grupo-inputs {
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  margin-bottom: 15px;
-  text-align: left; /* ✅ Todo alineado a la izquierda */
-}
-
-.campo {
-  display: flex;
-  flex-direction: column;
-}
-
-.campo label {
-  font-size: 16px;
-  font-weight: 500;
-  margin-bottom: 5px;
-}
-
-.campo input {
-  width: 100%;
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  outline: none;
-}
-
-/* PASSWORD WRAPPER */
-.envoltorio-clave {
-  position: relative;
-}
-
-.envoltorio-clave input {
-  padding-right: 40px;
-}
-
-.icono {
-  position: absolute;
-  top: 50%;
-  right: 10px;
-  transform: translateY(-50%);
-  cursor: pointer;
-  font-size: 22px;
-  color: #666;
-  transition: color 0.3s;
-}
-
-.icono:hover {
-  color: #333;
-}
-
-/* CHECKBOX */
-.contenedor-checkbox {
-  display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 14px;
-  margin-bottom: 15px;
+  width: 100%; /* 🔹 Ocupará todo el ancho disponible */
+  max-width: 600px; /* 🔹 Aumentamos el tamaño del formulario */
+  background: white;
+  padding: 50px; /* 🔹 Más espacio interno */
+  border-radius: 16px; /* 🔹 Bordes más redondeados */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* 🔹 Sombra más pronunciada */
 }
 
-.checkbox-personalizado {
-  display: inline-flex;
-  align-items: center;
-  position: relative;
-}
 
-.checkbox-personalizado input {
-  position: absolute;
-  opacity: 0;
-  cursor: pointer;
-  height: 0;
-  width: 0;
-}
-
-.marca {
-  width: 18px;
-  height: 18px;
-  background-color: #E9E9E9;
-  border-radius: 4px;
-  transition: all 0.3s ease;
-}
-
-.checkbox-personalizado input:checked + .marca {
-  background-color: #4CAF50;
-}
-
-.checkbox-personalizado input:checked + .marca::after {
-  content: "✔";
-  color: white;
-  font-size: 12px;
+/* ✅ Títulos */
+.subtitulo {
+  font-size: 16px;
   font-weight: bold;
-  display: block;
   text-align: center;
+  margin-bottom: 25px;
 }
 
-/* SEPARADOR PARA "¿YA TIENES CUENTA?" */
-.separador-inferior {
-  margin-top: 25px;
-}
-
-/* LÍNEA SEPARADORA MEJORADA */
-.linea-separadora {
+/* ✅ Imagen */
+.imagen-robot {
+  width: 120px;
   margin: 15px auto;
-  width: 60%;  /* 🔥 Más corta */
-  border: 0;
-  border-top: 3px solid black; /* 🔥 Más grosor y color negro */
+  display: block;
 }
 
-/* TEXTO DE "¿HAS OLVIDADO TU CONTRASEÑA?" */
-.texto-olvido {
-  margin-top: 15px; /* Ajusta el espaciado */
-  font-weight: bold;
-  text-decoration: none;
+/* ✅ Se mantiene pero sin `font-weight` */
+::v-deep(.campo) {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+  position: relative;
+  font-size: 16px;
+  margin-top: 20px;
 }
+
+/* ✅ FORZAMOS EL LABEL A NEGRITA */
+::v-deep(.campo label) {
+  font-weight: 600 !important; /* 🔥 AHORA SÍ SE VE MÁS NEGRITA */
+  font-size: 18px; /* 🔹 Ajusta el tamaño si lo quieres más grande */
+  color: #000; /* 🔹 Asegura que sea negro */
+  margin-bottom: 6px; /* 🔹 Más separación del input */
+}
+
+/* ✅ Ajuste del input-container */
+::v-deep(.input-container) {
+  width: 100%;
+}
+
+/* ✅ Corrección del check (✔) dentro del input */
+.icono-check {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-10%);
+  font-size: 22px;
+  color: green;
+}
+
+/* ✅ Estilos de error */
+.error-borde {
+  border: 2px solid red !important;
+  box-shadow: 0 0 8px rgba(255,0,0,0.9) !important;
+}
+
+.borde-iluminado {
+  border: 2px solid #7A40E0 !important;
+  box-shadow: 0 0 8px rgba(122,64,224,0.9) !important;
+}
+
+/* ✅ Mensaje de error */
+.mensaje-error {
+  color: red;
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+/* ✅ Barra separadora */
+.linea-separadora {
+  margin: 30px auto !important;
+  width: 80%;
+  border: 0;
+  border-top: 3px solid #ccc;
+}
+
+/* ✅ Centramos los textos */
+.texto-centrado {
+  text-align: center;
+  margin-bottom: 15px !important;
+}
+
+::v-deep(.texto-olvido strong) {
+  display: block; /* 🔹 O inline-block */
+  text-decoration: underline;
+  margin-top: 20px !important;
+  cursor: pointer;
+  text-align: center;
+  font-weight: 600 !important;
+  color: inherit !important;
+}
+
+::v-deep(header[data-v-7a7a37b1]) {
+  display: none !important;
+}
+
+
+
+
 </style>
