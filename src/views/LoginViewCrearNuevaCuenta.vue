@@ -59,8 +59,8 @@
               @focus="passwordFocus = true"
               @blur="passwordFocus = false"
             />
-            <!-- Check verde si passwordValida -->
-            <span v-if="passwordValida" class="icono-check">✔</span>
+            <!-- 🔴 Se ha eliminado el check de la contraseña aquí -->
+            <!-- <span v-if="passwordValida" class="icono-check">✔</span> -->
           </div>
           <p v-if="errorPassword" class="mensaje-error">❌ {{ errorPassword }}</p>
         </div>
@@ -106,6 +106,7 @@ const router = useRouter();
 // =============================
 const email = ref("");
 const password = ref("");
+const mostrarPassword = ref(false); // 👁 Controla si la contraseña es visible
 const emailFocus = ref(false);
 const passwordFocus = ref(false);
 const enviando = ref(false);
@@ -118,7 +119,7 @@ const errorPassword = ref("");
 // Validar Email
 // =============================
 function validarEmail() {
-  email.value = email.value.replace(/\s+/g, "");
+  email.value = email.value.replace(/\s+/g, ""); // 🔹 Elimina espacios
 
   if (!email.value) {
     errorEmail.value = "El email no puede estar vacío.";
@@ -147,9 +148,7 @@ function validarEmail() {
   }
   errorEmail.value = "";
 }
-const emailValido = computed(() => {
-  return errorEmail.value === "" && email.value !== "";
-});
+const emailValido = computed(() => errorEmail.value === "" && email.value !== "");
 
 // =============================
 // Validar Password
@@ -181,15 +180,13 @@ function validarPassword() {
   }
   errorPassword.value = "";
 }
-const passwordValida = computed(() => {
-  return errorPassword.value === "" && password.value !== "";
-});
+const passwordValida = computed(() => errorPassword.value === "" && password.value !== "");
 
 // =============================
 // Botón Deshabilitado
 // =============================
 const botonDeshabilitado = computed(() => {
-  return errorEmail.value !== "" || errorPassword.value !== "";
+  return !emailValido.value || !passwordValida.value;
 });
 
 // =============================
@@ -210,7 +207,6 @@ async function validarLogin() {
 
   // Simulación de envío
   setTimeout(() => {
-    // Ir al home (ejemplo)
     router.push("/");
     enviando.value = false;
   }, 1000);
@@ -226,6 +222,7 @@ function irARecuperarContrasena() {
   router.push("/recuperar-clave");
 }
 </script>
+
 
 <style scoped>
 .contenedor-pagina {
@@ -260,7 +257,8 @@ function irARecuperarContrasena() {
 }
 
 /* 
-  Agrupa label + <PruebaInput> + (check solo en email)
+  Agrupa label + <PruebaInput> 
+  (solo check en email)
 */
 .campo {
   display: flex;
@@ -275,7 +273,7 @@ function irARecuperarContrasena() {
   position: relative;
 }
 
-/* Check verde => Email y Password si son válidos */
+/* Check verde => Email y (se eliminó en password) */
 .icono-check {
   position: absolute;
   right: 8px;
