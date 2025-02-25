@@ -5,11 +5,7 @@
       <!-- CABECERA -->
       <div class="cabecera">
         <h1 class="titulo">Iniciar Sesión</h1>
-        <img
-          src="@/assets/images/ARturo.png"
-          alt="Robot"
-          class="imagen-robot"
-        />
+        <img src="@/assets/images/ARturo.png" alt="Robot" class="imagen-robot" />
       </div>
 
       <h2 class="subtitulo negrita">Iniciar sesión</h2>
@@ -20,20 +16,11 @@
         <div class="campo">
           <label for="email">Email</label>
           <div class="input-container">
-            <PruebaInput
-              id="email"
-              placeholder="Introduce tu email"
-              type="text"
-              v-model="email"
-              @input="validarEmail"
-              class="input-estilizado"
-              :class="{
+            <PruebaInput id="email" placeholder="Introduce tu email" type="text" v-model="email" @input="validarEmail"
+              class="input-estilizado" :class="{
                 'error-borde': errorEmail !== '',
                 'borde-iluminado': emailFocus
-              }"
-              @focus="emailFocus = true"
-              @blur="emailFocus = false"
-            />
+              }" @focus="emailFocus = true" @blur="emailFocus = false" />
             <!-- Check verde si emailValido -->
             <span v-if="emailValido" class="icono-check">✔</span>
           </div>
@@ -44,34 +31,23 @@
         <div class="campo">
           <label for="password">Contraseña</label>
           <div class="input-container">
-            <PruebaInput
-              id="password"
-              placeholder="Introduce tu contraseña"
-              type="password"
-              v-model="password"
-              @input="validarPassword"
-              :isValid="passwordValida"
-              class="input-estilizado"
-              :class="{
+            <PruebaInput id="password" placeholder="Introduce tu contraseña" type="password" v-model="password"
+              @input="validarPassword" :isValid="passwordValida" class="input-estilizado" :class="{
                 'error-borde': errorPassword !== '',
                 'borde-iluminado': passwordFocus
-              }"
-              @focus="passwordFocus = true"
-              @blur="passwordFocus = false"
-            />
+              }" @focus="passwordFocus = true" @blur="passwordFocus = false" />
             <!-- 🔴 Se ha eliminado el check de la contraseña aquí -->
             <!-- <span v-if="passwordValida" class="icono-check">✔</span> -->
           </div>
           <p v-if="errorPassword" class="mensaje-error">❌ {{ errorPassword }}</p>
         </div>
 
-        <!-- Botón Entrar (deshabilitado si hay error) -->
-        <PrimaryButton
-          class="boton-enviar"
-          label="Entrar"
-          type="submit"
-          :disabled="botonDeshabilitado || enviando"
-        />
+        <!-- 🔹 Cambiamos de "submit" a "button" -->
+        <PrimaryButton class="boton-enviar" label="Entrar" type="button" :disabled="botonDeshabilitado || enviando"
+          @click="validarLogin" />
+
+
+
 
         <!-- "¿Has olvidado tu contraseña?" -->
         <p class="texto-olvido" @click="irARecuperarContrasena">
@@ -81,11 +57,7 @@
         <hr class="linea-separadora" />
 
         <p class="texto-centrado">¿No tienes cuenta?</p>
-        <SecondaryButton
-          label="Ir a Crear nueva cuenta"
-          type="button"
-          @click="irACrearCuenta"
-        />
+        <SecondaryButton label="Ir a Crear nueva cuenta" type="button" @click="irACrearCuenta" />
       </form>
     </div>
   </div>
@@ -193,24 +165,19 @@ const botonDeshabilitado = computed(() => {
 // Función para login
 // =============================
 async function validarLogin() {
-  // Forzamos validaciones
   validarEmail();
   validarPassword();
 
   if (errorEmail.value || errorPassword.value) {
-    return;
+    return; // 🚨 No seguir si hay errores
   }
 
-  // Evitar envíos múltiples
   if (enviando.value) return;
   enviando.value = true;
 
-  // Simulación de envío
-  setTimeout(() => {
-    router.push("/");
-    enviando.value = false;
-  }, 1000);
+  router.push("/reserva"); // ✅ Redirección inmediata
 }
+
 
 // =============================
 // Navegación
@@ -241,22 +208,29 @@ onMounted(() => {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;  /* 🔹 Lo hacemos más alto */
+  height: 100vh;
+  /* 🔹 Lo hacemos más alto */
   width: 150%;
   background-color: #f8f9fa;
-  padding: 40px 20px; /* 🔹 Agregamos padding para evitar que quede pegado a los bordes */
+  padding: 40px 20px;
+  /* 🔹 Agregamos padding para evitar que quede pegado a los bordes */
 }
 
 .caja-formulario {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%; /* 🔹 Ocupará todo el ancho disponible */
-  max-width: 600px; /* 🔹 Aumentamos el tamaño del formulario */
+  width: 100%;
+  /* 🔹 Ocupará todo el ancho disponible */
+  max-width: 600px;
+  /* 🔹 Aumentamos el tamaño del formulario */
   background: white;
-  padding: 50px; /* 🔹 Más espacio interno */
-  border-radius: 16px; /* 🔹 Bordes más redondeados */
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* 🔹 Sombra más pronunciada */
+  padding: 50px;
+  /* 🔹 Más espacio interno */
+  border-radius: 16px;
+  /* 🔹 Bordes más redondeados */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  /* 🔹 Sombra más pronunciada */
 }
 
 
@@ -287,10 +261,14 @@ onMounted(() => {
 
 /* ✅ FORZAMOS EL LABEL A NEGRITA */
 ::v-deep(.campo label) {
-  font-weight: 600 !important; /* 🔥 AHORA SÍ SE VE MÁS NEGRITA */
-  font-size: 18px; /* 🔹 Ajusta el tamaño si lo quieres más grande */
-  color: #000; /* 🔹 Asegura que sea negro */
-  margin-bottom: 6px; /* 🔹 Más separación del input */
+  font-weight: 600 !important;
+  /* 🔥 AHORA SÍ SE VE MÁS NEGRITA */
+  font-size: 18px;
+  /* 🔹 Ajusta el tamaño si lo quieres más grande */
+  color: #000;
+  /* 🔹 Asegura que sea negro */
+  margin-bottom: 6px;
+  /* 🔹 Más separación del input */
 }
 
 /* ✅ Ajuste del input-container */
@@ -311,12 +289,12 @@ onMounted(() => {
 /* ✅ Estilos de error */
 .error-borde {
   border: 2px solid red !important;
-  box-shadow: 0 0 8px rgba(255,0,0,0.9) !important;
+  box-shadow: 0 0 8px rgba(255, 0, 0, 0.9) !important;
 }
 
 .borde-iluminado {
   border: 2px solid #7A40E0 !important;
-  box-shadow: 0 0 8px rgba(122,64,224,0.9) !important;
+  box-shadow: 0 0 8px rgba(122, 64, 224, 0.9) !important;
 }
 
 /* ✅ Mensaje de error */
@@ -341,7 +319,8 @@ onMounted(() => {
 }
 
 ::v-deep(.texto-olvido strong) {
-  display: block; /* 🔹 O inline-block */
+  display: block;
+  /* 🔹 O inline-block */
   text-decoration: underline;
   margin-top: 20px !important;
   cursor: pointer;
@@ -353,8 +332,4 @@ onMounted(() => {
 ::v-deep(header[data-v-7a7a37b1]) {
   display: none !important;
 }
-
-
-
-
 </style>

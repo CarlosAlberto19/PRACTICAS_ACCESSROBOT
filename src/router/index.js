@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
-
+import ReservaView from '@/views/ReservaView.vue';  // ✅ Importamos la nueva vista
 // ✅ Importamos las vistas con los nombres correctos
 import HomeView from '@/views/HomeView.vue';
 import LoginView from '@/views/LoginView.vue';
@@ -16,7 +16,8 @@ const router = createRouter({
     { path: '/crear-cuenta', name: 'crear-cuenta', component: CrearNuevaCuentaView },
     { path: '/datos-personales', name: 'datos-personales', component: DatosPersonalesView },
     { path: '/recuperar-clave', name: 'recuperar-clave', component: RecuperarClaveView },
-    { path: '/hemos-terminado', name: 'hemos-terminado', component: HemosTerminadoView }
+    { path: '/hemos-terminado', name: 'hemos-terminado', component: HemosTerminadoView },
+    { path: '/reserva', name: 'reserva', component: ReservaView }, // ✅ Nueva ruta añadida
   ],
 });
 
