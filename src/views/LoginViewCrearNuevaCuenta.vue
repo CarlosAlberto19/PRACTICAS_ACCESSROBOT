@@ -12,7 +12,7 @@
         />
       </div>
 
-      <h2 class="subtitulo negrita">Introduce tus credenciales</h2>
+      <h2 class="subtitulo negrita">Iniciar sesión</h2>
 
       <!-- FORMULARIO -->
       <form @submit.prevent="validarLogin">
@@ -225,6 +225,7 @@ function irARecuperarContrasena() {
 
 
 <style scoped>
+/* ✅ Se elimina font-weight aquí porque no afecta a los labels */
 .contenedor-pagina {
   display: flex;
   justify-content: center;
@@ -233,6 +234,8 @@ function irARecuperarContrasena() {
   width: 100%;
   background-color: #f8f9fa;
 }
+
+/* ✅ Se mantiene sin cambios */
 .caja-formulario {
   display: flex;
   flex-direction: column;
@@ -244,76 +247,92 @@ function irARecuperarContrasena() {
   border-radius: 12px;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
+
+/* ✅ Títulos */
 .subtitulo {
   font-size: 16px;
   font-weight: bold;
   text-align: center;
   margin-bottom: 25px;
 }
+
+/* ✅ Imagen */
 .imagen-robot {
   width: 120px;
   margin: 15px auto;
   display: block;
 }
 
-/* 
-  Agrupa label + <PruebaInput> 
-  (solo check en email)
-*/
-.campo {
+/* ✅ Se mantiene pero sin `font-weight` */
+::v-deep(.campo) {
   display: flex;
   flex-direction: column;
   margin-bottom: 15px;
   position: relative;
-  font-weight: bold;
-  font-size: 14px;
+  font-size: 16px;
+  margin-top: 20px;
 }
 
-.input-container {
-  position: relative;
+/* ✅ FORZAMOS EL LABEL A NEGRITA */
+::v-deep(.campo label) {
+  font-weight: 600 !important; /* 🔥 AHORA SÍ SE VE MÁS NEGRITA */
+  font-size: 18px; /* 🔹 Ajusta el tamaño si lo quieres más grande */
+  color: #000; /* 🔹 Asegura que sea negro */
+  margin-bottom: 6px; /* 🔹 Más separación del input */
 }
 
-/* Check verde => Email y (se eliminó en password) */
+/* ✅ Ajuste del input-container */
+::v-deep(.input-container) {
+  width: 100%;
+}
+
+/* ✅ Corrección del check (✔) dentro del input */
 .icono-check {
   position: absolute;
   right: 8px;
   top: 50%;
-  transform: translateY(-50%);
-  font-size: 18px;
+  transform: translateY(-10%);
+  font-size: 22px;
   color: green;
 }
 
-/* Borde error + focus */
+/* ✅ Estilos de error */
 .error-borde {
   border: 2px solid red !important;
   box-shadow: 0 0 8px rgba(255,0,0,0.9) !important;
 }
+
 .borde-iluminado {
   border: 2px solid #7A40E0 !important;
   box-shadow: 0 0 8px rgba(122,64,224,0.9) !important;
 }
 
-/* Mensaje de error */
+/* ✅ Mensaje de error */
 .mensaje-error {
   color: red;
   font-size: 14px;
   margin-top: 4px;
 }
 
-/* Barra separadora */
+/* ✅ Barra separadora */
 .linea-separadora {
-  margin: 20px auto;
+  margin: 30px auto !important;
   width: 80%;
   border: 0;
   border-top: 3px solid #ccc;
 }
+
+/* ✅ Centramos los textos */
 .texto-centrado {
   text-align: center;
+  margin-bottom: 15px !important;
 }
+
 .texto-olvido {
   text-decoration: underline;
-  margin-top: 10px;
+  margin-top: 20px !important;
   cursor: pointer;
   text-align: center;
 }
+
 </style>
