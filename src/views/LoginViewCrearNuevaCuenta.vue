@@ -221,6 +221,17 @@ function irACrearCuenta() {
 function irARecuperarContrasena() {
   router.push("/recuperar-clave");
 }
+
+import { onMounted } from "vue";
+
+onMounted(() => {
+  const header = document.querySelector("header");
+  if (header) {
+    header.style.display = "none";
+  }
+});
+
+
 </script>
 
 
@@ -230,23 +241,24 @@ function irARecuperarContrasena() {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 95vh;
-  width: 100%;
+  height: 100vh;  /* 🔹 Lo hacemos más alto */
+  width: 150%;
   background-color: #f8f9fa;
+  padding: 40px 20px; /* 🔹 Agregamos padding para evitar que quede pegado a los bordes */
 }
 
-/* ✅ Se mantiene sin cambios */
 .caja-formulario {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 95%;
-  max-width: 500px;
+  width: 100%; /* 🔹 Ocupará todo el ancho disponible */
+  max-width: 600px; /* 🔹 Aumentamos el tamaño del formulario */
   background: white;
-  padding: 40px;
-  border-radius: 12px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  padding: 50px; /* 🔹 Más espacio interno */
+  border-radius: 16px; /* 🔹 Bordes más redondeados */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* 🔹 Sombra más pronunciada */
 }
+
 
 /* ✅ Títulos */
 .subtitulo {
@@ -328,11 +340,21 @@ function irARecuperarContrasena() {
   margin-bottom: 15px !important;
 }
 
-.texto-olvido {
+::v-deep(.texto-olvido strong) {
+  display: block; /* 🔹 O inline-block */
   text-decoration: underline;
   margin-top: 20px !important;
   cursor: pointer;
   text-align: center;
+  font-weight: 600 !important;
+  color: inherit !important;
 }
+
+::v-deep(header[data-v-7a7a37b1]) {
+  display: none !important;
+}
+
+
+
 
 </style>
