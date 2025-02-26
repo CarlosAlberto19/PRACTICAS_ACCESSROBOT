@@ -27,51 +27,31 @@ const togglePassword = () => {
 </script>
 
 <template>
-  <div class="prueba-input">
-    <!-- ✅ Label del input -->
-    <label v-if="label_input" class="label-input">{{ label_input }}</label>
+  <!-- ✅ Eliminamos el div innecesario -->
+  <div class="contenedor-input">
+    <input
+      :type="inputType"
+      :placeholder="placeholder"
+      class="input-estilo"
+      :class="{ 'error-borde': error !== '', 'borde-iluminado': isValid }"
+      :value="modelValue"
+      @input="$emit('update:modelValue', $event.target.value)"
+    />
 
-    <!-- ✅ Contenedor del input -->
-    <div class="contenedor-input">
-      <input
-        :type="inputType"
-        :placeholder="placeholder"
-        class="input-estilo"
-        :class="{ 'error-borde': error !== '', 'borde-iluminado': isValid }"
-        :value="modelValue"
-        @input="$emit('update:modelValue', $event.target.value)"
-      />
+    <!-- ✅ Check morado si el input es válido -->
+    <span v-if="isValid" class="icono-check">✔</span>
 
-      <!-- ✅ Check morado si el input es válido -->
-      <span v-if="isValid" class="icono-check">✔</span>
-
-      <!-- 👁 Icono de ojo para contraseña -->
-      <span v-if="type === 'password'" class="material-icons icono-ojo" @click="togglePassword">
-        {{ inputType === 'password' ? 'visibility' : 'visibility_off' }}
-      </span>
-    </div>
-
-    <!-- ✅ Mensaje de error -->
-    <p v-if="error" class="mensaje-error">❌ {{ error }}</p>
+    <!-- 👁 Icono de ojo para contraseña -->
+    <span v-if="type === 'password'" class="material-icons icono-ojo" @click="togglePassword">
+      {{ inputType === 'password' ? 'visibility' : 'visibility_off' }}
+    </span>
   </div>
+
+  <!-- ✅ Mensaje de error -->
+  <p v-if="error" class="mensaje-error">❌ {{ error }}</p>
 </template>
 
 <style scoped>
-/* 🔥 Contenedor principal */
-.prueba-input {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-/* 🔥 Label */
-.label-input {
-  font-size: 16px;
-  font-weight: bold;
-  color: #444;
-  margin-bottom: 4px;
-}
-
 /* 🔥 Contenedor del input */
 .contenedor-input {
   position: relative;
