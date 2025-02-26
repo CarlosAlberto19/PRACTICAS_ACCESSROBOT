@@ -1,34 +1,34 @@
 <script setup>
 import { ref, watch } from 'vue';
 
-// 📌 Definir props con valores por defecto
+// 📌 Definir props
 const props = defineProps({
   label_input: { type: String, default: '' },
   type: { type: String, default: 'text' },
   placeholder: { type: String, default: '' },
   modelValue: { type: String, default: '' },
-  isValid: { type: Boolean, default: false }, // ✅ Check de validación
-  error: { type: String, default: '' } // ✅ Mensaje de error
+  isValid: { type: Boolean, default: false }, // ✅ Check ✔️
+  error: { type: String, default: '' } // ✅ Error ❌
 });
 
 // 📌 Emitir eventos
 const emits = defineEmits(['update:modelValue']);
 
-// 📌 Estado para la visibilidad del password
+// 📌 Manejo de visibilidad de contraseña
 const inputType = ref(props.type);
 watch(() => props.type, (newType) => {
   inputType.value = newType;
 });
 
-// 📌 Mostrar/Ocultar contraseña
+// 📌 Función para mostrar/ocultar contraseña
 const togglePassword = () => {
   inputType.value = inputType.value === 'password' ? 'text' : 'password';
 };
 </script>
 
 <template>
-  <!-- ✅ Eliminamos el div innecesario -->
   <div class="contenedor-input">
+    <!-- ✅ Input con borde rojo si hay error y morado si es válido -->
     <input
       :type="inputType"
       :placeholder="placeholder"
@@ -77,7 +77,7 @@ const togglePassword = () => {
   box-shadow: 0 0 8px rgba(255, 0, 0, 0.7);
 }
 
-/* ✅ Borde iluminado si el input es válido */
+/* ✅ Borde morado si es válido */
 .borde-iluminado {
   border: 2px solid #7A40E0 !important;
   box-shadow: 0 0 8px rgba(122, 64, 224, 0.9) !important;
@@ -85,7 +85,7 @@ const togglePassword = () => {
 
 /* ✅ Check morado */
 .icono-check {
-  color: #7A40E0 !important;  /* 🔥 Ahora es morado */
+  color: #7A40E0 !important; /* 🔥 Ahora es morado */
   position: absolute;
   right: 12px;
   top: 50%;
