@@ -12,7 +12,10 @@
       <!-- FORMULARIO -->
       <form @submit.prevent="irADatosPersonales">
         <!-- EMAIL -->
-        <PruebaInput  label_input="Email" placeholder="Introduce tu email" type="email" v-model="email" />
+        <PruebaInput  label_input="Email" placeholder="Introduce tu email" type="email" v-model="email"
+        :error="errorEmail"
+        :isValid="emailValido" 
+        @input="validarEmail" />
 
         <!-- CONTRASEÑA con validaciones -->
         <PruebaInput
@@ -21,26 +24,26 @@
           type="password"
           class="contenedor-contraseña"
           v-model="password"
+          @input="manejarInputPassword" 
         />
 
-        <!-- Detalles de validación de la contraseña -->
-        <div class="grupo-input">
-          <label class="label-contraseña">Tu contraseña debe contener:</label>
-          <ul class="validaciones">
-  <li :class="longitudCorrecta ? 'valido' : (password.length > 0 ? 'error' : 'pendiente')">
-    entre 8 y 16 caracteres
-  </li>
-  <li :class="tieneMayusMinus ? 'valido' : (password.length > 0 ? 'error' : 'pendiente')">
-    mayúsculas y minúsculas
-  </li>
-  <li :class="tieneNumero ? 'valido' : (password.length > 0 ? 'error' : 'pendiente')">
-    al menos un número
-  </li>
-</ul>
+        <!-- ✅ Mostramos las validaciones solo cuando el usuario empiece a escribir -->
+          <div v-if="mostrarRequisitosPassword" class="grupo-input">
+            <label class="label-contraseña">Tu contraseña debe contener:</label>
+            <ul class="validaciones">
+              <li :class="longitudCorrecta ? 'valido' : 'error'">
+                ✔ entre 8 y 16 caracteres
+              </li>
+              <li :class="tieneMayusMinus ? 'valido' : 'error'">
+                ✔ mayúsculas y minúsculas
+              </li>
+              <li :class="tieneNumero ? 'valido' : 'error'">
+                ✔ al menos un número
+              </li>
+            </ul>
+          </div>
 
-        </div>
-
-        <!-- Checkbox de Términos -->
+                  <!-- Checkbox de Términos -->
         <Checkbox v-model="aceptaTerminos" label="Acepto los Términos y condiciones de uso" />
 
         <!-- Botón Siguiente (habilitado solo si todo es válido) -->
@@ -81,21 +84,19 @@ const router = useRouter();
 const email = ref('');
 const password = ref('');
 const aceptaTerminos = ref(false);
+const mostrarRequisitosPassword = ref(false); // ✅ Al inicio oculto
 
-// Validaciones de la contraseña
-const longitudCorrecta = computed(() => {
-  return password.value.length >= 8 && password.value.length <= 16;
-});
+// ✅ Función para mostrar validaciones solo si hay texto
+const manejarInputPassword = () => {
+  mostrarRequisitosPassword.value = password.value !== ''; // Si el campo está vacío, oculta validaciones
+};
 
-const tieneMayusMinus = computed(() => {
-  return /[a-z]/.test(password.value) && /[A-Z]/.test(password.value);
-});
+// ✅ Validaciones de la contraseña
+const longitudCorrecta = computed(() => password.value.length >= 8 && password.value.length <= 16);
+const tieneMayusMinus = computed(() => /[a-z]/.test(password.value) && /[A-Z]/.test(password.value));
+const tieneNumero = computed(() => /\d/.test(password.value));
 
-const tieneNumero = computed(() => {
-  return /\d/.test(password.value);
-});
-
-// Validación del formulario
+// ✅ Validación del formulario
 const validarFormulario = computed(() =>
   longitudCorrecta.value &&
   tieneMayusMinus.value &&
@@ -103,16 +104,13 @@ const validarFormulario = computed(() =>
   aceptaTerminos.value
 );
 
-// Funciones para cambiar estilos de validación dinámicamente
-const validacionClase = (condicion) => {
-  return condicion ? 'valido' : 'error';
-};
+// ✅ Clases dinámicas para estilos de validación
+const validacionClase = (condicion) => condicion ? 'valido' : 'error';
 
-const validacionIcono = (condicion) => {
-  return condicion ? '✔' : '!';
-};
+// ✅ Íconos dinámicos para validaciones
+const validacionIcono = (condicion) => condicion ? '✔' : '!';
 
-// Navegación
+// ✅ Navegación
 const irADatosPersonales = () => {
   if (validarFormulario.value) {
     router.push('/datos-personales');
@@ -126,6 +124,20 @@ const irALogin = () => {
 const irARecuperarContrasena = () => {
   router.push('/recuperar-clave');
 };
+
+const errorEmail = ref("");
+
+const validarEmail = () => {
+  if (!email.value.includes("@") || !email.value.includes(".")) {
+    errorEmail.value = "Introduce un email válido";
+  } else {
+    errorEmail.value = "";
+  }
+};
+
+const emailValido = computed(() => errorEmail.value === "" && email.value !== "");
+
+
 </script>
 
 
