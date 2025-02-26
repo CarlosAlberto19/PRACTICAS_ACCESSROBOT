@@ -1,49 +1,66 @@
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch } from "vue";
 
 // 📌 Definir props con valores por defecto
 const props = defineProps({
   label_input: {
     type: String,
-    default: ''
+    default: "",
   },
   type: {
     type: String,
-    default: 'text'
+    default: "text",
   },
   placeholder: {
     type: String,
-    default: ''
+    default: "",
   },
   modelValue: {
     type: String,
-    default: ''
+    default: "",
   },
-  error: { type: String, default: ''
+  error: { type: String, default: "" }, // ✅ Nueva prop para manejar errores
 
-  }, // ✅ Nueva prop para manejar errores
-
-showCheck: { type: Boolean, default: false } // 🔥 Nueva prop para el check
+  showCheck: { type: Boolean, default: false }, // 🔥 Nueva prop para el check
 });
 
 // 📌 Definir evento para actualizar el valor del input
-const emits = defineEmits(['update:modelValue']);
+const emits = defineEmits(["update:modelValue"]);
 
 // 📌 Estado para manejar la visibilidad del password
 const inputType = ref(props.type);
-watch(() => props.type, (newType) => {
-  inputType.value = newType;
-});
+watch(
+  () => props.type,
+  (newType) => {
+    inputType.value = newType;
+  }
+);
 
 // 📌 Si el tipo de input cambia desde el padre, actualizamos inputType
-watch(() => props.type, (newType) => {
-  inputType.value = newType;
-});
+watch(
+  () => props.type,
+  (newType) => {
+    inputType.value = newType;
+  }
+);
 
 // 📌 Función para mostrar/ocultar la contraseña
 const togglePassword = () => {
-  inputType.value = inputType.value === 'password' ? 'text' : 'password';
+  inputType.value = inputType.value === "password" ? "text" : "password";
 };
+
+const modelValueSync = ref(props.modelValue);
+
+watch(
+  () => props.modelValue,
+  (newValue) => {
+    modelValueSync.value = newValue;
+  }
+);
+
+watch(modelValueSync, (newValue) => {
+  emits("update:modelValue", newValue);
+});
 </script>
 
 <template>
@@ -51,26 +68,31 @@ const togglePassword = () => {
     <label v-if="label_input" class="label-input">{{ label_input }}</label>
 
     <div class="contenedor-input">
-            <input
+      <input
         :type="inputType"
         :placeholder="placeholder"
         class="input-estilo"
-        :class="{ 
-          'error-borde': error !== '',  // 🔴 Rojo si hay error
-          'borde-iluminado': error === '' && modelValue !== '' // 🟣 Morado si está bien
+        :class="{
+          'error-borde': error !== '',
+          'borde-iluminado': error === '' && modelValue !== '',
         }"
-        :value="modelValue"
-        @input="$emit('update:modelValue', $event.target.value)"
+        v-model="modelValueSync"
       />
 
-
-
       <!-- ✅ Check solo si showCheck es TRUE -->
-      <span v-if="type !== 'password' && modelValue !== '' && error === ''" class="icono-check">✔</span>
-        
+      <span
+        v-if="type !== 'password' && modelValue !== '' && error === ''"
+        class="icono-check"
+        >✔</span
+      >
+
       <!-- 🔥 Icono de ojo para contraseña -->
-      <span v-if="type === 'password'" class="material-icons icono-ojo" @click="togglePassword">
-        {{ inputType === 'password' ? 'visibility' : 'visibility_off' }}
+      <span
+        v-if="type === 'password'"
+        class="material-icons icono-ojo"
+        @click="togglePassword"
+      >
+        {{ inputType === "password" ? "visibility" : "visibility_off" }}
       </span>
     </div>
 

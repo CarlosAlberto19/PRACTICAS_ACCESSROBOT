@@ -1,5 +1,6 @@
 <template>
   <div class="ios-wrapper">
+    <!-- 🔹 Barra de navegación -->
     <header class="header-bar">
       <button class="btn-atras" @click="irAtras">← Atrás</button>
       <h1 class="titulo-header">Nueva cuenta</h1>
@@ -7,14 +8,14 @@
 
     <main class="contenedor-pagina">
       <div class="caja-formulario">
-        <!-- DATOS PERSONALES -->
+        <!-- 🔹 Datos Personales -->
         <div class="cabecera">
           <h1 class="titulo">Tus datos personales</h1>
           <p class="subtitulo">Para que podamos comunicarnos contigo si es necesario.</p>
         </div>
 
         <div class="formulario">
-          <!-- Nombre -->
+          <!-- 📌 Nombre -->
           <PruebaInput 
             label_input="Nombre" 
             placeholder="Introduce tu nombre" 
@@ -25,7 +26,7 @@
           />
           <span v-if="errorNombre" class="error-texto">⚠ Solo letras (máx. 30 caracteres)</span>
 
-          <!-- Apellidos -->
+          <!-- 📌 Primer apellido -->
           <PruebaInput 
             label_input="Primer apellido" 
             placeholder="Introduce tu primer apellido" 
@@ -36,6 +37,7 @@
           />
           <span v-if="errorApellido1" class="error-texto">⚠ Solo letras (máx. 30 caracteres)</span>
 
+          <!-- 📌 Segundo apellido -->
           <PruebaInput 
             label_input="Segundo apellido (Opcional)" 
             placeholder="Introduce tu segundo apellido" 
@@ -53,8 +55,14 @@
               <option value="+1">US +1</option>
               <option value="+44">UK +44</option>
             </select>
-            <PruebaInput id="telefono" class="input-telefono" placeholder="000000000" type="tel"
-              v-model="telefono" @input="telefono = limpiarTelefono(telefono)" @blur="validarTelefono"
+            <PruebaInput 
+              id="telefono" 
+              class="input-telefono" 
+              placeholder="000000000" 
+              type="tel"
+              v-model="telefono" 
+              @input="telefono = limpiarTelefono(telefono)" 
+              @blur="validarTelefono"
             />
           </div>
           <span v-if="errorTelefono" class="error-texto">⚠ Número inválido (9-15 dígitos)</span>
@@ -62,14 +70,14 @@
 
         <div class="separador"></div>
 
-        <!-- PERSONA DE CONFIANZA -->
+        <!-- 🔹 Persona de confianza (Opcional) -->
         <div class="cabecera">
           <h2 class="titulo">Persona de confianza (Opcional)</h2>
           <p class="subtitulo">Le enviaremos notificaciones vía SMS. Si no, deja el formulario en blanco.</p>
         </div>
 
         <div class="formulario">
-          <!-- Nombre o Alias -->
+          <!-- 📌 Nombre o Alias -->
           <PruebaInput 
             label_input="Nombre o Alias" 
             placeholder="Introduce el nombre" 
@@ -87,19 +95,31 @@
               <option value="+1">US +1</option>
               <option value="+44">UK +44</option>
             </select>
-            <PruebaInput class="input-telefono" id="telefonoConfianza" placeholder="000000000" type="tel"
-              v-model="telefonoConfianza" @input="telefonoConfianza = limpiarTelefono(telefonoConfianza)" @blur="validarTelefonoConfianza"
+            <PruebaInput 
+              class="input-telefono" 
+              id="telefonoConfianza" 
+              placeholder="000000000" 
+              type="tel"
+              v-model="telefonoConfianza" 
+              @input="telefonoConfianza = limpiarTelefono(telefonoConfianza)" 
+              @blur="validarTelefonoConfianza"
             />
           </div>
           <span v-if="errorTelefonoConfianza" class="error-texto">⚠ Número inválido (9-15 dígitos)</span>
         </div>
 
-        <!-- Botón -->
-        <PrimaryButton label="Siguiente" type="button" :disabled="!formularioValido" @click="irAHemosTerminado"/>
+        <!-- 🔹 Botón Siguiente -->
+        <PrimaryButton 
+          label="Siguiente" 
+          type="button" 
+          :disabled="!formularioValido" 
+          @click="irAHemosTerminado"
+        />
       </div>
     </main>
   </div>
 </template>
+
 
 <script setup>
 import { ref, computed } from 'vue';
@@ -113,16 +133,6 @@ const route = useRoute(); // ✅ Capturar la información de la URL
 // ✅ Recibir el email desde LoginView2 (NO se muestra en la UI)
 const email = ref(route.query.email || '');
 
-// ✅ Función para ir a "Hemos Terminado", PASANDO EL EMAIL
-const irAHemosTerminado = () => {
-  validarFormulario();
-  if (formularioValido.value) {
-    router.push({ path: "/hemos-terminado", query: { email: email.value } });
-  } else {
-    console.log('❌ Hay errores en el formulario');
-  }
-};
-
 // 📌 Variables reactivas para los campos del formulario
 const nombre = ref('');
 const apellido1 = ref('');
@@ -133,7 +143,7 @@ const nombreConfianza = ref('');
 const telefonoConfianza = ref('');
 const codigoPaisConfianza = ref('+34');
 
-// 📌 Validaciones
+// 📌 Estados de error
 const errorNombre = ref(false);
 const errorApellido1 = ref(false);
 const errorApellido2 = ref(false);
@@ -141,31 +151,53 @@ const errorTelefono = ref(false);
 const errorNombreConfianza = ref(false);
 const errorTelefonoConfianza = ref(false);
 
+// 📌 Función para validar texto (solo letras, entre 2 y 30 caracteres)
 const validarTexto = (campo) => {
   const texto = campo.trim();
   return texto.length >= 2 && texto.length <= 30 && /^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$/.test(texto);
 };
 
-const limitarTexto = (campo) =>
+// 📌 Función para limpiar texto (eliminar caracteres inválidos)
+const limitarTexto = (campo) => 
   campo.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ ]/g, '').slice(0, 30);
 
-const limpiarTelefono = (campo) =>
+// 📌 Función para limpiar teléfono (solo números y ciertos caracteres)
+const limpiarTelefono = (campo) => 
   campo.replace(/[^0-9+\-() ]/g, '').slice(0, 15);
 
+// 📌 Función para validar teléfono principal
 const validarTelefono = () => {
   telefono.value = limpiarTelefono(telefono.value);
   const digits = telefono.value.replace(/[^0-9]/g, '');
   errorTelefono.value = digits.length < 9 || digits.length > 15;
 };
 
-const validarFormulario = () => {
-  errorNombre.value = !validarTexto(nombre.value);
-  errorApellido1.value = !validarTexto(apellido1.value);
-  errorApellido2.value = apellido2.value.length > 0 && !validarTexto(apellido2.value);
-  validarTelefono();
+// 📌 Función para validar teléfono de confianza
+const validarTelefonoConfianza = () => {
+  telefonoConfianza.value = limpiarTelefono(telefonoConfianza.value);
+  const digits = telefonoConfianza.value.replace(/[^0-9]/g, '');
+  errorTelefonoConfianza.value = digits.length < 9 || digits.length > 15;
 };
 
-const formularioValido = computed(() =>
+// 📌 Funciones individuales de validación
+const validarNombre = () => {
+  errorNombre.value = !validarTexto(nombre.value);
+};
+
+const validarApellido1 = () => {
+  errorApellido1.value = !validarTexto(apellido1.value);
+};
+
+const validarApellido2 = () => {
+  errorApellido2.value = apellido2.value.length > 0 && !validarTexto(apellido2.value);
+};
+
+const validarNombreConfianza = () => {
+  errorNombreConfianza.value = !validarTexto(nombreConfianza.value);
+};
+
+// 📌 Validación general del formulario
+const formularioValido = computed(() => 
   !errorNombre.value &&
   !errorApellido1.value &&
   !errorApellido2.value &&
@@ -173,7 +205,17 @@ const formularioValido = computed(() =>
   telefono.value.replace(/[^0-9]/g, '').length >= 9 &&
   telefono.value.replace(/[^0-9]/g, '').length <= 15
 );
+
+// 📌 Función para ir a "Hemos Terminado", pasando el email
+const irAHemosTerminado = () => {
+  if (formularioValido.value) {
+    router.push({ path: "/hemos-terminado", query: { email: email.value } });
+  } else {
+    console.log('❌ Hay errores en el formulario');
+  }
+};
 </script>
+
 
 
 
@@ -264,13 +306,26 @@ const formularioValido = computed(() =>
 /* ============================
    FORMULARIO EXPANDIDO Y CENTRADO
 =============================== */
+.contenedor-pagina {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;  /* 🔥 Aseguramos que los elementos se coloquen en columna */
+  width: 100%;
+  min-height: 100vh; /* 🔥 Asegura que ocupa toda la altura de la pantalla */
+  background-color: #f8f9fa;
+  padding-bottom: 50px; /* 🔥 Aumentamos el espacio al final */
+}
+/* ============================
+   FORMULARIO EXPANDIDO Y CENTRADO
+=============================== */
 .caja-formulario {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 750px; 
+  max-width: 90%; /* 🔥 Se adapta mejor a pantallas pequeñas */
   background: white;
-  padding: 50px;
+  padding: 40px;  /* 🔥 Reducimos un poco el padding */
   border-radius: 15px;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
@@ -348,45 +403,55 @@ const formularioValido = computed(() =>
    AJUSTE DEL TAMAÑO DE LOS INPUTS (-25%)
 =============================== */
 :deep(.prueba-input .contenedor-input input) {
-  height: 45px; /* Antes 32px (+15%) */
-  width: 90%; /* Antes 70% (+15%) */
-  padding: 6px 12px;
+  height: 40px; /* 🔥 Antes 45px (-10%) */
+  width: 80%; /* 🔥 Antes 90% (-10%) */
+  padding: 4px 10px; /* 🔥 Menos padding para mejorar visibilidad */
   font-size: 14px;
-  border: 1px solid #ccc; /* Borde normal */
+  border: 1px solid #ccc;
   transition: all 0.3s ease-in-out;
 }
 
+/* 📌 Mejoramos el enfoque */
 :deep(.prueba-input .contenedor-input input:focus) {
-  border-color: #7A40E0; /* 🔥 Color morado (puedes cambiarlo) */
-  box-shadow: 0 0 5px rgba(122, 64, 224, 0.6); /* Efecto de brillo */
-  outline: none; /* Elimina el borde azul por defecto */
+  border-color: #7A40E0;
+  box-shadow: 0 0 5px rgba(122, 64, 224, 0.6);
+  outline: none;
 }
 
-/* 📌 Placeholder más visible por defecto */
+/* 📌 Placeholder más visible */
 :deep(.prueba-input .contenedor-input input::placeholder) {
-  color: #555; /* Color más oscuro */
-  font-weight: bold; /* Negrita para mayor visibilidad */
-  opacity: 1; /* Asegura que se vea bien en todos los navegadores */
+  color: #666;
+  font-weight: bold;
   transition: color 0.3s ease-in-out;
 }
 
-/* Teléfono (select + input) - aumento de tamaño */
+/* 📌 Placeholder cambia al hacer focus */
+:deep(.prueba-input .contenedor-input input:focus::placeholder) {
+  color: #7A40E0;
+  font-weight: bold;
+}
+
+/* ============================
+   TELÉFONO (select + input)
+=============================== */
 .telefono-container {
-  gap: 8px;
-  width: 130%;
+  gap: 6px; /* 🔥 Antes 8px (más compacto) */
+  width: 100%;
 }
 
+/* 📌 Reducimos tamaño del select */
 .codigo-pais {
-  flex: 0 0 85px; /* Antes 75px (+15%) */
-  height: 37px;
-  font-size: 14px;
-  padding: 6px;
+  flex: 0 0 80px; /* 🔥 Antes 85px */
+  height: 35px;
+  font-size: 13px;
+  padding: 4px;
 }
 
+/* 📌 Reducimos tamaño del input de teléfono */
 :deep(.prueba-input.input-telefono .contenedor-input input) {
-  height: 37px;
-  font-size: 14px;
-  padding: 6px 10px;
+  height: 35px;
+  font-size: 13px;
+  padding: 4px 8px;
 }
 
 /* ============================
@@ -394,10 +459,27 @@ const formularioValido = computed(() =>
 =============================== */
 :deep(.prueba-input label), 
 .form-group > span {
-  font-size: 16px; /* Antes 13px */
+  font-size: 15px; /* 🔥 Antes 16px (-1px para mejor escalabilidad) */
   font-weight: bold;
   color: #333;
   margin-bottom: 4px;
+}
+
+/* ============================
+   ESPACIADO EXTRA ENTRE EL ÚLTIMO INPUT Y "SIGUIENTE"
+=============================== */
+:deep(.primary-button) {
+  margin-top: 50px; /* 🔥 Antes 40px (+10px) */
+}
+
+/* ============================
+   SEPARADOR MÁS MARCADO
+=============================== */
+.separador {
+  margin: 35px auto; /* 🔥 Antes 30px */
+  width: 80%; /* 🔥 Antes 70% */
+  border-top: 3px solid #7A40E0;
+  opacity: 0.9; /* 🔥 Aumentamos opacidad */
 }
 
 /* ============================
