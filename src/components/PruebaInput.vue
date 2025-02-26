@@ -79,45 +79,39 @@ const togglePassword = () => {
 </template>
 
 <style scoped>
-/* Contenedor principal */
+/* ✅ Contenedor principal */
 .prueba-input {
   display: flex;
   flex-direction: column;
-  gap: 10px; /* 🔥 Aumentamos separación entre label e input */
+  gap: 10px;
 }
 
-/* Label */
+/* ✅ Label */
 .label-input {
-  font-size: 16px;  /* 🔥 Más grande para mejor lectura */
+  font-size: 16px;
   font-weight: bold;
-  color: #444; /* 🔥 Un poco más oscuro */
-  margin-bottom: 4px; /* 🔥 Separación con el input */
+  color: #444;
+  margin-bottom: 4px;
 }
 
-/* Contenedor de input + icono */
+/* ✅ Contenedor de input + icono */
 .contenedor-input {
   position: relative;
   display: flex;
   align-items: center;
 }
 
-/* Estilo del input */
+/* ✅ Estilo del input */
 .input-estilo {
   width: 100%;
-  height: 50px; /* 🔥 Más alto para mejor UX */
+  height: 50px;
   padding: 14px 16px;
   font-size: 16px;
   border: 1px solid #bbb;
   border-radius: 8px;
   outline: none;
   box-sizing: border-box;
-  transition: border 0.2s ease-in-out;
-}
-
-/* ✅ Efecto hover y focus */
-.input-estilo:hover,
-.input-estilo:focus {
-  border-color: #7a40e0; /* 🔥 Color del tema */
+  transition: border 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 
 /* ✅ Borde rojo si hay error */
@@ -126,10 +120,16 @@ const togglePassword = () => {
   box-shadow: 0 0 8px rgba(255, 0, 0, 0.7);
 }
 
-/* ✅ Borde iluminado cuando el input está enfocado */
+/* ✅ Borde morado si es válido */
 .borde-iluminado {
   border: 2px solid #7a40e0 !important;
   box-shadow: 0 0 8px rgba(122, 64, 224, 0.7);
+}
+
+/* ✨ EFECTO HOVER cuando el input es válido */
+.borde-iluminado:hover {
+  box-shadow: 0 0 15px rgba(122, 64, 224, 1);
+  transition: box-shadow 0.3s ease-in-out;
 }
 
 /* ✅ Check verde cuando el input es válido */
@@ -140,10 +140,17 @@ const togglePassword = () => {
   transform: translateY(-50%);
   font-size: 22px;
   font-weight: bold;
-  color: green !important; /* ✅ Verde fuerte */
+  color: green !important;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
 }
 
-/* 👁 Icono del ojo */
+/* ✅ Aparece el check cuando el input es válido */
+.input-estilo.borde-iluminado + .icono-check {
+  opacity: 1;
+}
+
+/* 🔥 Icono del ojo */
 .icono-ojo {
   position: absolute;
   right: 16px;
@@ -152,6 +159,7 @@ const togglePassword = () => {
   color: #666;
   transition: color 0.2s;
 }
+
 .icono-ojo:hover {
   color: #333;
 }
@@ -162,5 +170,4 @@ const togglePassword = () => {
   font-size: 14px;
   margin-top: 4px;
 }
-
 </style>
