@@ -81,6 +81,7 @@
           <span v-if="errorNombreConfianza" class="error-texto">⚠ Solo letras (máx. 30 caracteres)</span>
 
           <!-- 📌 Teléfono de confianza -->
+          <label for="telefonoConfianza">Teléfono de confianza</label>
           <div class="telefono-container">
             <select v-model="codigoPaisConfianza" class="codigo-pais">
               <option value="+34">ES +34</option>
@@ -89,7 +90,7 @@
             </select>
             <PruebaInput class="input-telefono" id="telefonoConfianza" placeholder="000000000" type="tel"
               v-model="telefonoConfianza" @input="telefonoConfianza = limpiarTelefono(telefonoConfianza)" @blur="validarTelefonoConfianza"
-            />
+              />
           </div>
           <span v-if="errorTelefonoConfianza" class="error-texto">⚠ Número inválido (9-15 dígitos)</span>
         </div>
@@ -185,6 +186,29 @@ const formularioValido = computed(() =>
 
 
 <style scoped>
+
+/* ✅ Contenedor del campo */
+.campo {
+  position: relative; /* Para que el check se posicione correctamente */
+  margin-bottom: 20px;
+}
+
+/* ✅ Icono de check (ahora bien alineado) */
+.icono-check {
+  position: absolute;
+  right: 12px; /* 🔥 Más espacio a la derecha */
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  color: green;
+}
+
+/* ✅ Ajustar padding para evitar que el check se solape con el texto */
+.input-estilo {
+  padding-right: 30px; /* 🔥 Deja espacio para el icono */
+}
+
+
 /* ============================
    ENVOLTORIO GENERAL
 =============================== */
@@ -259,10 +283,8 @@ const formularioValido = computed(() =>
    CONTENIDO PRINCIPAL
 =============================== */
 .contenedor-pagina {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex: 1; 
+ 
+  
   width: 100%;
   background-color: #f8f9fa;
 }
@@ -274,12 +296,18 @@ const formularioValido = computed(() =>
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 750px; 
+  width: 850px; 
   background: white;
   padding: 50px;
   border-radius: 15px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);  
+  min-height: 800px; /* o el valor que quieras */  /* ... resto de estilos ... */
+  
 }
+
+  
+
+
 
 /* Cabeceras dentro del formulario */
 .cabecera {
@@ -327,6 +355,7 @@ const formularioValido = computed(() =>
   font-size: 14px;
   margin-top: -10px;
 }
+
 
 /* ============================
    TELÉFONO (select + input)
