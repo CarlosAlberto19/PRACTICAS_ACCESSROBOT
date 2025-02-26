@@ -4,7 +4,11 @@
       <!-- CABECERA -->
       <div class="cabecera">
         <h1 class="titulo">Iniciar Sesión</h1>
-        <img src="@/assets/images/ARturo.png" alt="Robot" class="imagen-robot" />
+        <img
+          src="@/assets/images/ARturo.png"
+          alt="Robot"
+          class="imagen-robot"
+        />
       </div>
 
       <h2 class="subtitulo negrita">Iniciar sesión</h2>
@@ -14,39 +18,44 @@
         <!-- EMAIL -->
         <div class="campo">
           <label for="email">Email</label>
-          <div class="input-container">
-            <PruebaInput id="email" placeholder="Introduce tu email" type="text" v-model="email" @input="validarEmail"
-              class="input-estilizado" :class="{
-                'error-borde': errorEmail !== '',
-                'borde-iluminado': emailFocus
-              }" @focus="emailFocus = true" @blur="emailFocus = false" />
-            <!-- Check verde si emailValido -->
-            <span v-if="emailValido" class="icono-check">✔</span>
-          </div>
-          <p v-if="errorEmail" class="mensaje-error">❌ {{ errorEmail }}</p>
+          <PruebaInput 
+            id="email" 
+            placeholder="Introduce tu email" 
+            type="text" 
+            v-model="email" 
+            @input="validarEmail"
+            :error="errorEmail"
+          />
+         
+
+          
         </div>
 
-        <!-- CONTRASEÑA -->
-        <div class="campo">
-          <label for="password">Contraseña</label>
-          <div class="input-container">
-            <PruebaInput id="password" placeholder="Introduce tu contraseña" type="password" v-model="password"
-              @input="validarPassword" :isValid="passwordValida" class="input-estilizado" :class="{
-                'error-borde': errorPassword !== '',
-                'borde-iluminado': passwordFocus
-              }" @focus="passwordFocus = true" @blur="passwordFocus = false" />
-            <!-- 🔴 Se ha eliminado el check de la contraseña aquí -->
-            <!-- <span v-if="passwordValida" class="icono-check">✔</span> -->
-          </div>
-          <p v-if="errorPassword" class="mensaje-error">❌ {{ errorPassword }}</p>
-        </div>
+      <!-- CONTRASEÑA -->
+      <div class="campo">
+        <label for="password">Contraseña</label>
+        <PruebaInput 
+          id="password" 
+          placeholder="Introduce tu contraseña" 
+          type="password" 
+          v-model="password"
+          @input="validarPassword"
+          :error="errorPassword"
+          @focus="passwordFocus = true" 
+          @blur="passwordFocus = false" 
+        />
+        
+      </div>
+
 
         <!-- 🔹 Cambiamos de "submit" a "button" -->
-        <PrimaryButton class="boton-enviar" label="Entrar" type="button" :disabled="botonDeshabilitado || enviando"
-          @click="validarLogin" />
-
-
-
+        <PrimaryButton
+          class="boton-enviar"
+          label="Entrar"
+          type="button"
+          :disabled="botonDeshabilitado || enviando"
+          @click="validarLogin"
+        />
 
         <!-- "¿Has olvidado tu contraseña?" -->
         <p class="texto-olvido" @click="irARecuperarContrasena">
@@ -56,7 +65,11 @@
         <hr class="linea-separadora" />
 
         <p class="texto-centrado">¿No tienes cuenta?</p>
-        <SecondaryButton label="Ir a Crear nueva cuenta" type="button" @click="irACrearCuenta" />
+        <SecondaryButton
+          label="Ir a Crear nueva cuenta"
+          type="button"
+          @click="irACrearCuenta"
+        />
       </form>
     </div>
   </div>
@@ -119,7 +132,9 @@ function validarEmail() {
   }
   errorEmail.value = "";
 }
-const emailValido = computed(() => errorEmail.value === "" && email.value !== "");
+const emailValido = computed(
+  () => errorEmail.value === "" && email.value !== ""
+);
 
 // =============================
 // Validar Password
@@ -151,7 +166,9 @@ function validarPassword() {
   }
   errorPassword.value = "";
 }
-const passwordValida = computed(() => errorPassword.value === "" && password.value !== "");
+const passwordValida = computed(
+  () => errorPassword.value === "" && password.value !== ""
+);
 
 // =============================
 // Botón Deshabilitado
@@ -177,7 +194,6 @@ async function validarLogin() {
   router.push("/reserva"); // ✅ Redirección inmediata
 }
 
-
 // =============================
 // Navegación
 // =============================
@@ -196,10 +212,7 @@ onMounted(() => {
     header.style.display = "none";
   }
 });
-
-
 </script>
-
 
 <style scoped>
 /* ✅ Se elimina font-weight aquí porque no afecta a los labels */
@@ -231,7 +244,6 @@ onMounted(() => {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   /* 🔹 Sombra más pronunciada */
 }
-
 
 /* ✅ Títulos */
 .subtitulo {
@@ -292,7 +304,7 @@ onMounted(() => {
 }
 
 .borde-iluminado {
-  border: 2px solid #7A40E0 !important;
+  border: 2px solid #7a40e0 !important;
   box-shadow: 0 0 8px rgba(122, 64, 224, 0.9) !important;
 }
 
