@@ -465,4 +465,3 @@ const emailValido = computed(() => errorEmail.value === "" && email.value !== ""
   cursor: pointer;
 }
 </style>
-
