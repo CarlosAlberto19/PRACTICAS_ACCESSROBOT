@@ -189,23 +189,26 @@ const formularioValido = computed(() =>
 
 /* ✅ Contenedor del campo */
 .campo {
-  position: relative; /* Para que el check se posicione correctamente */
-  margin-bottom: 20px;
+  position: relative; /* Permite posicionar el check dentro */
+  display: flex;
+  align-items: center;
+  width: 100%;
 }
 
-/* ✅ Icono de check (ahora bien alineado) */
+/* ✅ Ajustamos el input para que deje espacio al check */
+.input-estilo {
+  width: 100%; /* Asegura que el input ocupe el contenedor */
+  padding-right: 35px; /* 🔥 Espacio extra para el check */
+}
+
+/* ✅ Ajustamos el icono-check */
 .icono-check {
   position: absolute;
-  right: 12px; /* 🔥 Más espacio a la derecha */
+  right: 10px; /* 🔥 Ajustamos más cerca del input */
   top: 50%;
   transform: translateY(-50%);
   font-size: 18px;
   color: green;
-}
-
-/* ✅ Ajustar padding para evitar que el check se solape con el texto */
-.input-estilo {
-  padding-right: 30px; /* 🔥 Deja espacio para el icono */
 }
 
 
