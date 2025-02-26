@@ -1,4 +1,3 @@
-<!-- filepath: /c:/Users/carlo/Desktop/Xtd Talento Digital Once/PRACTICAS_ACCESSROBOT-master/src/views/LoginViewCrearNuevaCuenta.vue -->
 <template>
   <div class="contenedor-pagina">
     <div class="caja-formulario">
@@ -16,12 +15,20 @@
         <div class="campo">
           <label for="email">Email</label>
           <div class="input-container">
-            <PruebaInput id="email" placeholder="Introduce tu email" type="text" v-model="email" @input="validarEmail"
-              class="input-estilizado" :class="{
+            <PruebaInput 
+              id="email" 
+              placeholder="Introduce tu email" 
+              type="text" 
+              v-model="email" 
+              @input="validarEmail"
+              class="input-estilizado" 
+              :class="{
                 'error-borde': errorEmail !== '',
                 'borde-iluminado': emailFocus
-              }" @focus="emailFocus = true" @blur="emailFocus = false" />
-            <!-- Check verde si emailValido -->
+              }" 
+              @focus="emailFocus = true" 
+              @blur="emailFocus = false" 
+            />
             <span v-if="emailValido" class="icono-check">✔</span>
           </div>
           <p v-if="errorEmail" class="mensaje-error">❌ {{ errorEmail }}</p>
@@ -31,25 +38,33 @@
         <div class="campo">
           <label for="password">Contraseña</label>
           <div class="input-container">
-            <PruebaInput id="password" placeholder="Introduce tu contraseña" type="password" v-model="password"
-              @input="validarPassword" :isValid="passwordValida" class="input-estilizado" :class="{
+            <PruebaInput 
+              id="password" 
+              placeholder="Introduce tu contraseña" 
+              type="password" 
+              v-model="password"
+              @input="validarPassword"
+              class="input-estilizado" 
+              :class="{
                 'error-borde': errorPassword !== '',
                 'borde-iluminado': passwordFocus
-              }" @focus="passwordFocus = true" @blur="passwordFocus = false" />
-            <!-- 🔴 Se ha eliminado el check de la contraseña aquí -->
-            <!-- <span v-if="passwordValida" class="icono-check">✔</span> -->
+              }" 
+              @focus="passwordFocus = true" 
+              @blur="passwordFocus = false" 
+            />
           </div>
           <p v-if="errorPassword" class="mensaje-error">❌ {{ errorPassword }}</p>
         </div>
 
-        <!-- 🔹 Cambiamos de "submit" a "button" -->
-        <PrimaryButton class="boton-enviar" label="Entrar" type="button" :disabled="botonDeshabilitado || enviando"
-          @click="validarLogin" />
+        <!-- Botón Entrar -->
+        <PrimaryButton 
+          class="boton-enviar" 
+          label="Entrar" 
+          type="button" 
+          :disabled="botonDeshabilitado || enviando"
+          @click="validarLogin" 
+        />
 
-
-
-
-        <!-- "¿Has olvidado tu contraseña?" -->
         <p class="texto-olvido" @click="irARecuperarContrasena">
           <strong>¿Has olvidado tu contraseña?</strong>
         </p>
@@ -78,12 +93,11 @@ const router = useRouter();
 // =============================
 const email = ref("");
 const password = ref("");
-const mostrarPassword = ref(false); // 👁 Controla si la contraseña es visible
 const emailFocus = ref(false);
 const passwordFocus = ref(false);
 const enviando = ref(false);
 
-// Errores (si están vacíos => no hay error)
+// Errores
 const errorEmail = ref("");
 const errorPassword = ref("");
 
@@ -91,26 +105,14 @@ const errorPassword = ref("");
 // Validar Email
 // =============================
 function validarEmail() {
-  email.value = email.value.replace(/\s+/g, ""); // 🔹 Elimina espacios
+  email.value = email.value.replace(/\s+/g, "");
 
   if (!email.value) {
     errorEmail.value = "El email no puede estar vacío.";
     return;
   }
-  if ((email.value.match(/@/g) || []).length > 1) {
-    errorEmail.value = 'El email solo puede contener un "@"';
-    return;
-  }
-  if (!email.value.includes("@")) {
-    errorEmail.value = 'El email debe contener "@"';
-    return;
-  }
-  if (!email.value.includes(".")) {
-    errorEmail.value = 'El email debe contener "." después de "@"';
-    return;
-  }
-  if (email.value.length > 50) {
-    errorEmail.value = "El email no puede superar los 50 caracteres.";
+  if (!email.value.includes("@") || !email.value.includes(".")) {
+    errorEmail.value = 'El email debe contener "@" y "."';
     return;
   }
   const reEmail = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
@@ -120,6 +122,8 @@ function validarEmail() {
   }
   errorEmail.value = "";
 }
+
+// Computed para el check ✔
 const emailValido = computed(() => errorEmail.value === "" && email.value !== "");
 
 // =============================
@@ -130,35 +134,18 @@ function validarPassword() {
     errorPassword.value = "La contraseña no puede estar vacía.";
     return;
   }
-  if (password.value.length < 8 || password.value.length > 16) {
-    errorPassword.value = "Debe tener entre 8 y 16 caracteres.";
-    return;
-  }
-  if (!/[a-z]/.test(password.value) || !/[A-Z]/.test(password.value)) {
-    errorPassword.value = "Debe incluir mayúsculas y minúsculas.";
-    return;
-  }
-  if (!/\d/.test(password.value)) {
-    errorPassword.value = "Debe contener al menos un número.";
-    return;
-  }
-  if (/\s/.test(password.value)) {
-    errorPassword.value = "No se permiten espacios en la contraseña.";
-    return;
-  }
-  if (/[^a-zA-Z0-9!@#$%^&*]/.test(password.value)) {
-    errorPassword.value = "No se permiten caracteres especiales extraños.";
+  if (password.value.length < 8) {
+    errorPassword.value = "Debe tener al menos 8 caracteres.";
     return;
   }
   errorPassword.value = "";
 }
-const passwordValida = computed(() => errorPassword.value === "" && password.value !== "");
 
 // =============================
 // Botón Deshabilitado
 // =============================
 const botonDeshabilitado = computed(() => {
-  return !emailValido.value || !passwordValida.value;
+  return !emailValido.value || errorPassword.value !== "";
 });
 
 // =============================
@@ -169,15 +156,14 @@ async function validarLogin() {
   validarPassword();
 
   if (errorEmail.value || errorPassword.value) {
-    return; // 🚨 No seguir si hay errores
+    return;
   }
 
   if (enviando.value) return;
   enviando.value = true;
 
-  router.push("/reserva"); // ✅ Redirección inmediata
+  router.push("/reserva");
 }
-
 
 // =============================
 // Navegación
@@ -188,32 +174,18 @@ function irACrearCuenta() {
 function irARecuperarContrasena() {
   router.push("/recuperar-clave");
 }
-
-import { onMounted } from "vue";
-
-onMounted(() => {
-  const header = document.querySelector("header");
-  if (header) {
-    header.style.display = "none";
-  }
-});
-
-
 </script>
 
-
 <style scoped>
-/* ✅ Se elimina font-weight aquí porque no afecta a los labels */
+/* ✅ Manteniendo todos los estilos */
 .contenedor-pagina {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  /* 🔹 Lo hacemos más alto */
   width: 150%;
   background-color: #f8f9fa;
   padding: 40px 20px;
-  /* 🔹 Agregamos padding para evitar que quede pegado a los bordes */
 }
 
 .caja-formulario {
@@ -221,20 +193,13 @@ onMounted(() => {
   flex-direction: column;
   align-items: center;
   width: 100%;
-  /* 🔹 Ocupará todo el ancho disponible */
   max-width: 600px;
-  /* 🔹 Aumentamos el tamaño del formulario */
   background: white;
   padding: 50px;
-  /* 🔹 Más espacio interno */
   border-radius: 16px;
-  /* 🔹 Bordes más redondeados */
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  /* 🔹 Sombra más pronunciada */
 }
 
-
-/* ✅ Títulos */
 .subtitulo {
   font-size: 16px;
   font-weight: bold;
@@ -242,14 +207,12 @@ onMounted(() => {
   margin-bottom: 25px;
 }
 
-/* ✅ Imagen */
 .imagen-robot {
   width: 120px;
   margin: 15px auto;
   display: block;
 }
 
-/* ✅ Se mantiene pero sin `font-weight` */
 ::v-deep(.campo) {
   display: flex;
   flex-direction: column;
@@ -259,24 +222,17 @@ onMounted(() => {
   margin-top: 20px;
 }
 
-/* ✅ FORZAMOS EL LABEL A NEGRITA */
 ::v-deep(.campo label) {
   font-weight: 600 !important;
-  /* 🔥 AHORA SÍ SE VE MÁS NEGRITA */
   font-size: 18px;
-  /* 🔹 Ajusta el tamaño si lo quieres más grande */
   color: #000;
-  /* 🔹 Asegura que sea negro */
   margin-bottom: 6px;
-  /* 🔹 Más separación del input */
 }
 
-/* ✅ Ajuste del input-container */
 ::v-deep(.input-container) {
   width: 100%;
 }
 
-/* ✅ Corrección del check (✔) dentro del input */
 .icono-check {
   position: absolute;
   right: 8px;
@@ -286,7 +242,6 @@ onMounted(() => {
   color: green;
 }
 
-/* ✅ Estilos de error */
 .error-borde {
   border: 2px solid red !important;
   box-shadow: 0 0 8px rgba(255, 0, 0, 0.9) !important;
@@ -297,14 +252,12 @@ onMounted(() => {
   box-shadow: 0 0 8px rgba(122, 64, 224, 0.9) !important;
 }
 
-/* ✅ Mensaje de error */
 .mensaje-error {
   color: red;
   font-size: 14px;
   margin-top: 4px;
 }
 
-/* ✅ Barra separadora */
 .linea-separadora {
   margin: 30px auto !important;
   width: 80%;
@@ -312,7 +265,6 @@ onMounted(() => {
   border-top: 3px solid #ccc;
 }
 
-/* ✅ Centramos los textos */
 .texto-centrado {
   text-align: center;
   margin-bottom: 15px !important;
@@ -320,7 +272,6 @@ onMounted(() => {
 
 ::v-deep(.texto-olvido strong) {
   display: block;
-  /* 🔹 O inline-block */
   text-decoration: underline;
   margin-top: 20px !important;
   cursor: pointer;
