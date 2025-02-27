@@ -8,7 +8,7 @@ app.use(cors()); // Habilita peticiones desde el frontend
 
 // Ruta de prueba
 app.get('/', (req, res) => {
-  res.send('Servidor funcionando correctamente 🚀');
+  res.send('Servidor funcionando correctamente. hola 🚀');
 });
 
 // Iniciar el servidor en el puerto 5000
