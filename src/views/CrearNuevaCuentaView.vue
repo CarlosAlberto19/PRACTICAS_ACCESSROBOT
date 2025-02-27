@@ -62,7 +62,7 @@
 
       <!-- Texto "¿Has olvidado tu contraseña?" (lleva a recuperar clave) -->
       <p class="texto-olvido" @click="irARecuperarContrasena">
-        <strong>¿Has olvidado tu contraseña?</strong>
+        ¿Has olvidado tu contraseña?
       </p>
 
       
@@ -408,7 +408,7 @@ const emailValido = computed(() => errorEmail.value === "" && email.value !== ""
 .texto-olvido {
   text-decoration: underline; ;
   margin-top: 20px;
-  font-weight: bold;
+  font-weight: 500;
   cursor: pointer;
 }
 

@@ -3,7 +3,7 @@
     <div class="caja-formulario">
       <!-- CABECERA -->
       <div class="cabecera">
-        <h1 class="titulo">Iniciar Sesión</h1>
+        <h1 class="titulo">Access Robot</h1>
         <img
           src="@/assets/images/ARturo.png"
           alt="Robot"
@@ -222,7 +222,7 @@ onMounted(() => {
   align-items: center;
   height: 100vh;
   /* 🔹 Lo hacemos más alto */
-  width: 150%;
+  width: 180%;
   background-color: #f8f9fa;
   padding: 40px 20px;
   /* 🔹 Agregamos padding para evitar que quede pegado a los bordes */
@@ -234,7 +234,7 @@ onMounted(() => {
   align-items: center;
   width: 100%;
   /* 🔹 Ocupará todo el ancho disponible */
-  max-width: 600px;
+  max-width: 800px;
   /* 🔹 Aumentamos el tamaño del formulario */
   background: white;
   padding: 50px;
@@ -247,7 +247,7 @@ onMounted(() => {
 
 /* ✅ Títulos */
 .subtitulo {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: bold;
   text-align: center;
   margin-bottom: 25px;
@@ -255,8 +255,8 @@ onMounted(() => {
 
 /* ✅ Imagen */
 .imagen-robot {
-  width: 120px;
-  margin: 15px auto;
+  width: 160px;
+  margin: 25px auto;
   display: block;
 }
 
