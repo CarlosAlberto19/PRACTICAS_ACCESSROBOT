@@ -514,9 +514,19 @@ const irAtras = () => {
   margin-top: 4px;
 }
 
-/* Borde rojo cuando hay error */
+.mensaje-error {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* 🔥 Separación entre icono y texto */
+  margin-top: 5px; /* 🔥 Espacio extra con el input */
+  font-size: 14px;
+  color: red;
+}
+
 :deep(.prueba-input input.error) {
   border-color: red;
   box-shadow: 0 0 4px rgba(255, 0, 0, 0.5);
+  /* gap eliminado porque no tiene efecto aquí */
 }
+
 </style>
