@@ -222,7 +222,7 @@ onMounted(() => {
   align-items: center;
   height: 100vh;
   /* 🔹 Lo hacemos más alto */
-  width: 180%;
+  width: 160%;
   background-color: #f8f9fa;
   padding: 40px 20px;
   /* 🔹 Agregamos padding para evitar que quede pegado a los bordes */
@@ -234,7 +234,7 @@ onMounted(() => {
   align-items: center;
   width: 100%;
   /* 🔹 Ocupará todo el ancho disponible */
-  max-width: 800px;
+  max-width: 700px;
   /* 🔹 Aumentamos el tamaño del formulario */
   background: white;
   padding: 50px;

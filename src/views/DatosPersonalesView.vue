@@ -96,8 +96,8 @@
               v-model="telefonoConfianza"
               @input="validarTelefonoConfianza"
               @blur="validarTelefonoConfianza"
-              :error="errorTelefonoConfianza"
-              :showCheck="telefonoConfianzaValido"
+              :error="errorTelefono"
+              :showCheck="telefonoValido"
             />
           </div>
         </div>
@@ -244,12 +244,22 @@ const irAtras = () => {
 }
 
 /* ✅ Ajustamos el icono-check */
-.icono-check {
-  position: absolute;
-  right: 10px; /* 🔥 Ajustamos más cerca del input */
+::v-deep(.icono-check) {   
+  position: absolute !important;
+  right: 65px;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 18px;
+  font-size: 22px;
+  color: green;
+}
+
+/* ✅ Ajustamos el icono-check SOLO para los teléfonos */
+::v-deep(.telefono-container .icono-check) {   
+  position: absolute !important;
+  right: 35px; /* 🔥 Ajusta según necesidad */
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 22px;
   color: green;
 }
 
@@ -457,7 +467,7 @@ const irAtras = () => {
 :deep(.prueba-input.input-telefono .contenedor-input input) {
   height: 37px;
   font-size: 14px;
-  padding: 6px 10px;
+  padding: 2px 10px;
 }
 
 /* ============================

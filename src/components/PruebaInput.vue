@@ -80,6 +80,9 @@ watch(modelValueSync, (newValue) => {
       />
 
       <!-- ✅ Check solo si showCheck es TRUE -->
+
+      <span v-if="showCheck" class="icono-check">✔</span>
+
       <span
         v-if="type !== 'password' && modelValue !== '' && error === ''"
         class="icono-check"
@@ -99,6 +102,7 @@ watch(modelValueSync, (newValue) => {
     <p v-if="error" class="mensaje-error">❌ {{ error }}</p>
   </div>
 </template>
+
 
 <style scoped>
 /* ✅ Contenedor principal */

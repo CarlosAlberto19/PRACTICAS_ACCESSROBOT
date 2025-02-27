@@ -1,6 +1,6 @@
 <template>
     <div class="contenedor-pagina">
-        <h1 class="titulo">Reserva de Asientos</h1>
+        <h1 class="titulo">Reserva </h1>
         <p>Bienvenido a la pantalla de reserva.</p>
     </div>
 </template>
