@@ -1,29 +1,32 @@
 const express = require("express");
+
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
-
 const router = express.Router();
 
 // 📌 REGISTRO DE USUARIOS
 router.post("/register", async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password } = req.body;  // Datos del body
 
-    // ✅ Verificar si el usuario ya existe
+    // 1) Verificar si el usuario ya existe
     const existeUsuario = await User.findOne({ email });
-    if (existeUsuario) return res.status(400).json({ message: "Usuario ya registrado" });
+    if (existeUsuario) {
+      return res.status(400).json({ message: "Usuario ya registrado" });
+    }
 
-    // ✅ Hashear la contraseña
+    // 2) Hashear la contraseña
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // ✅ Guardar usuario
+    // 3) Guardar usuario en la BD
     const nuevoUsuario = new User({ email, password: hashedPassword });
     await nuevoUsuario.save();
 
     res.status(201).json({ message: "Usuario registrado con éxito" });
   } catch (error) {
+    console.error(error);  // <-- Muestra el error real en la consola
     res.status(500).json({ message: "Error en el servidor" });
   }
 });
@@ -31,21 +34,30 @@ router.post("/register", async (req, res) => {
 // 📌 INICIO DE SESIÓN
 router.post("/login", async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password } = req.body;  // Datos del body
 
-    // ✅ Verificar si el usuario existe
+    // 1) Verificar si el usuario existe
     const usuario = await User.findOne({ email });
-    if (!usuario) return res.status(400).json({ message: "Usuario no encontrado" });
+    if (!usuario) {
+      return res.status(400).json({ message: "Usuario no encontrado" });
+    }
 
-    // ✅ Comparar la contraseña
+    // 2) Comparar la contraseña hasheada
     const esValida = await bcrypt.compare(password, usuario.password);
-    if (!esValida) return res.status(401).json({ message: "Contraseña incorrecta" });
+    if (!esValida) {
+      return res.status(401).json({ message: "Contraseña incorrecta" });
+    }
 
-    // ✅ Generar token JWT
-    const token = jwt.sign({ id: usuario._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+    // 3) Generar token JWT
+    const token = jwt.sign(
+      { id: usuario._id },             // Payload
+      process.env.JWT_SECRET,          // Clave secreta de tu .env
+      { expiresIn: "1h" }             // Opciones (expira en 1 hora)
+    );
 
     res.json({ message: "Inicio de sesión exitoso", token });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: "Error en el servidor" });
   }
 });
